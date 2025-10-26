@@ -1,0 +1,27 @@
+# requirements.txt
+
+# --- Web Framework ---
+Flask==2.3.3
+Flask-Cors==6.0.1
+
+# --- AI & Machine Learning ---
+tensorflow==2.19.0
+ultralytics==8.3.90
+scikit-learn==1.5.1
+
+# --- Image Processing & Data Handling ---
+opencv-python==4.11.0.86
+numpy==1.26.4
+Pillow==10.4.0
+
+# --- OCR (Optical Character Recognition) ---
+pytesseract==0.3.13
+
+# --- API & Utilities ---
+requests==2.32.5
+python-dotenv==0.21.0
+
+#--- Server---
+gunicorn
+celery
+redis
