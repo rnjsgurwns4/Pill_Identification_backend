@@ -107,6 +107,8 @@ def search():
     search_shape = request.args.get('shape', '')
     search_color = request.args.get('color', '')
     search_imprint = request.args.get('imprint', '')
+    search_form = request.args.get('form', '')
+    search_company = request.args.get('company', '')
 
     # 2. 검색어 유효성 검사
     if not any([search_name, search_shape, search_color, search_imprint]):
@@ -122,7 +124,9 @@ def search():
         name=search_name,
         shape=search_shape,
         color=search_color,
-        imprint=search_imprint
+        imprint=search_imprint,
+        form=search_form,         
+        company=search_company   
     )
 
     # 5. [신규] 후보군을 순회하며 API로 이미지 URL 조회
