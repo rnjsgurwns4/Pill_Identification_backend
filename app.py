@@ -1,24 +1,57 @@
 # app.py
 
 import base64
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, session
+from flask_session import Session
+import os
+from dotenv import load_dotenv
 from celery.result import AsyncResult
+from datetime import timedelta
+import redis
 
 # Celery Task와 외부 API 핸들러를 임포트합니다.
 from tasks import analyze_pill_image_task
 from api_handler import get_pill_details_from_api
 from database_handler import load_database, find_match_by_text
+
+load_dotenv()
+
 # Flask 앱을 초기화합니다.
 app = Flask(__name__)
+
+
+
+app.config["SECRET_KEY"] = os.getenv("SECRET_KEY")
+app.config["SESSION_TYPE"] = "redis"
+app.config["SESSION_PERMANENT"] = True # 세션을 영구적으로(예: 30일) 유지
+app.config["SESSION_USE_SIGNER"] = True # 세션 쿠키를 암호화
+app.config["SESSION_REDIS"] = redis.Redis(host='localhost', port=6379, db=1) # ◀ db=1 사용 (기존 db=0과 분리)
+app.config["PERMANENT_SESSION_LIFETIME"] = timedelta(days=1)
+app.config["SESSION_REFRESH_EACH_REQUEST"] = True
+
+Session(app)
+
+try:
+    redis_client = redis.Redis(host='localhost', port=6379, db=2, decode_responses=True)
+    redis_client.ping()
+    print("Redis (db=2)에 성공적으로 연결되었습니다.")
+except Exception as e:
+    print(f"경고: Redis (db=2) 연결에 실패했습니다. {e}")
+    redis_client = None
+
+# (최근 검색 목록용 Redis 키와 카운트는 동일)
+RECENT_PILLS_KEY_PREFIX = "recent_pills:session:" # ◀ 키 접두사
+RECENT_PILLS_MAX_COUNT = 5
+
 
 DB_PATH = 'database/pill.csv'
 pill_db = load_database(DB_PATH)
 if pill_db is None:
     print(f"경고: '{DB_PATH}'를 찾을 수 없습니다. /search 엔드포인트가 작동하지 않습니다.")
     pill_db = [] # pill_db가 None이면 오류가 나므로 빈 리스트로 초기화
-
+    
+    
 # --- 비동기 처리 엔드포인트 ---
-
 @app.route('/predict', methods=['POST'])
 def predict():
     """
@@ -94,6 +127,21 @@ def detail():
         
     # 외부 API를 호출하여 결과를 가져옵니다.
     details = get_pill_details_from_api(item_code)
+    
+    if 'error' not in details and redis_client and session.sid:
+       try:
+           session['last_viewed_code'] = item_code
+            
+           # [수정] 세션 ID를 사용하여 사용자별 고유 키 생성
+           user_key = f"{RECENT_PILLS_KEY_PREFIX}{session.sid}:list"
+
+           # (로직은 동일: lrem, lpush, ltrim)
+           redis_client.lrem(user_key, 0, item_code)
+           redis_client.lpush(user_key, item_code)
+           redis_client.ltrim(user_key, 0, RECENT_PILLS_MAX_COUNT - 1)
+       except Exception as e:
+           print(f"Redis 작업 실패 (/detail, session: {session.sid}): {e}")
+           
     return jsonify(details)
 
 @app.route('/search', methods=['GET'])
@@ -155,6 +203,73 @@ def search():
     
     
     return jsonify({'pill_results': processed_candidates})
+
+@app.route('/recent', methods=['GET'])
+def get_recent():
+    """
+    (수정됨) *해당 세션의* 최근 검색 목록을 반환
+    """
+    if not redis_client:
+        return jsonify({'error': 'Redis에 연결되지 않았습니다.'}), 500
+
+    # [수정] 세션 ID가 없으면 빈 리스트 반환
+    if not session.sid:
+        return jsonify({'pill_results': []}) # ID가 없으면 그냥 빈 내역
+
+    pill_results = []
+    
+    try:
+        # [수정] 세션 ID를 사용하여 사용자별 고유 키로 조회
+        user_key = f"{RECENT_PILLS_KEY_PREFIX}{session.sid}:list"
+        item_codes = redis_client.lrange(user_key, 0, -1)
+        
+        # (이하 API 호출 및 결과 조합 로직은 동일)
+        for code in item_codes:
+            details = get_pill_details_from_api(code)
+
+            if 'error' not in details:
+                pill_results.append({
+                    'pill_info': details.get('제품명', '이름 없음'),
+                    'code': code,
+                    'image': details.get('이미지', '')
+                })
+
+    except Exception as e:
+        print(f"Redis 작업 실패 (/recent, session: {session.sid}): {e}")
+        return jsonify({'error': '최근 검색 목록을 불러오는 중 오류 발생'}), 500
+
+    return jsonify({'pill_results': pill_results})
+
+@app.after_request
+def refresh_recent_list_expiration(response):
+    """
+    모든 요청 처리 후 응답을 보내기 전에 실행됩니다.
+    세션이 있고, 최근 내역(db=2) 데이터가 존재하면 만료 시간을 갱신합니다.
+    """
+    try:
+        # 1. SESSION_REFRESH_EACH_REQUEST가 True이고, Redis(db=2)가 연결되어 있고, 세션 ID가 있을 때만 실행
+        if app.config.get("SESSION_REFRESH_EACH_REQUEST") and redis_client and session.sid:
+            
+            # 2. 사용자별 최근 내역 키 생성
+            user_key = f"{RECENT_PILLS_KEY_PREFIX}{session.sid}:list"
+            
+            # 3. 해당 키가 실제로 Redis(db=2)에 존재하는지 확인
+            #    ( /detail을 한 번도 호출 안 했으면 키가 없을 수 있음)
+            if redis_client.exists(user_key):
+                
+                # 4. 설정된 세션 만료 시간 가져오기
+                session_lifetime_seconds = app.config.get('PERMANENT_SESSION_LIFETIME', timedelta(days=31)).total_seconds()
+                
+                # 5. 키 만료 시간 갱신
+                redis_client.expire(user_key, int(session_lifetime_seconds))
+                
+    except Exception as e:
+        # 이 함수에서 에러가 발생해도 앱의 다른 기능에 영향을 주지 않도록 로깅만 함
+        print(f"Error refreshing recent list expiration: {e}")
+        
+    # 원래 응답(response) 객체를 그대로 반환해야 함
+    return response
+
 
 # --- 개발용 서버 실행 (Gunicorn 사용 시 이 부분은 사용되지 않음) ---
 if __name__ == '__main__':
