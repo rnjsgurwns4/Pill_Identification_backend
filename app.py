@@ -9,6 +9,10 @@ from celery.result import AsyncResult
 from datetime import timedelta
 import redis
 
+from flask import send_file
+import io
+import requests
+
 # Celery Task와 외부 API 핸들러를 임포트합니다.
 from tasks import analyze_pill_image_task
 from api_handler import get_pill_details_from_api
@@ -49,6 +53,33 @@ pill_db = load_database(DB_PATH)
 if pill_db is None:
     print(f"경고: '{DB_PATH}'를 찾을 수 없습니다. /search 엔드포인트가 작동하지 않습니다.")
     pill_db = [] # pill_db가 None이면 오류가 나므로 빈 리스트로 초기화
+
+@app.route('/image-proxy')
+def image_proxy():
+    """
+    이미지 다운로드 URL을 대신 받아서, 
+    'Content-Disposition' 헤더를 제거하고 이미지로 스트리밍합니다.
+    """
+    image_url = request.args.get('url')
+    if not image_url:
+        return "URL이 필요합니다.", 400
+    
+    try:
+        r = requests.get(image_url)
+        r.raise_for_status() # HTTP 에러 체크
+
+        # 원본의 콘텐츠 타입(예: 'image/jpeg')을 그대로 사용
+        content_type = r.headers.get('Content-Type', 'image/jpeg')
+
+        # 다운로드한 이미지의 바이트 데이터를 파일처럼 전송
+        return send_file(
+            io.BytesIO(r.content),
+            mimetype=content_type,
+            as_attachment=False # ◀◀ [핵심] False로 설정하여 "다운로드"가 아닌 "표시"하도록 함
+        )
+    except Exception as e:
+        print(f"이미지 프록시 실패: {e}")
+        return "이미지를 찾을 수 없습니다.", 404
     
     
 # --- 비동기 처리 엔드포인트 ---
@@ -276,4 +307,3 @@ if __name__ == '__main__':
     # 이 스크립트를 직접 실행할 때 (예: python app.py) 사용하는 개발용 서버
     # 실제 운영 환경(Production)에서는 Gunicorn을 사용
     app.run(host='0.0.0.0', port=5000, debug=True)
-
