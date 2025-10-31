@@ -258,7 +258,7 @@ def refresh_recent_list_expiration(response):
             if redis_client.exists(user_key):
                 
                 # 4. 설정된 세션 만료 시간 가져오기
-                session_lifetime_seconds = app.config.get('PERMANENT_SESSION_LIFETIME', timedelta(days=31)).total_seconds()
+                session_lifetime_seconds = app.config.get('PERMANENT_SESSION_LIFETIME', timedelta(days=1)).total_seconds()
                 
                 # 5. 키 만료 시간 갱신
                 redis_client.expire(user_key, int(session_lifetime_seconds))
@@ -276,3 +276,4 @@ if __name__ == '__main__':
     # 이 스크립트를 직접 실행할 때 (예: python app.py) 사용하는 개발용 서버
     # 실제 운영 환경(Production)에서는 Gunicorn을 사용
     app.run(host='0.0.0.0', port=5000, debug=True)
+
