@@ -12,7 +12,7 @@ from PIL import ImageFont
 from database_handler import load_database
 from object_detection import detect_pills
 from pill_analyzer import process_and_visualize_pills # 이전에 만든 메인 처리 함수
-from api_handler import get_pill_details_from_api
+from api_handler import get_pill_details_from_api, get_pill_image_from_api
 
 # --- 1. Celery 설정 ---
 # 'redis://localhost:6379/0'는 Redis 서버의 주소입니다.
@@ -91,23 +91,14 @@ def analyze_pill_image_task(image_string):
         for candidate in pill_candidates_for_one_box:
             item_code = candidate.get('code')
             pill_name = candidate.get('pill_info')
-                
-            image_url = '' # 기본값
-            if item_code and item_code != 'N/A':
-                try:
-                    # API 호출
-                    api_details = get_pill_details_from_api(item_code)
-                    if 'error' not in api_details:
-                        image_url = api_details.get('이미지', '') # '이미지' 키로 URL 가져오기
-                except Exception as api_e:
-                    print(f"API 호출 중 에러 발생 (코드: {item_code}): {api_e}")
-                    image_url = 'API_ERROR' # API 에러 시
-                
+            image_url = candidate.get('image_url', '')
+                    
+            
             # ◀ 현재 상자의 결과 리스트(current_box_results)에 추가
             current_box_results.append({ 
                 'pill_info': pill_name,
                 'code': item_code,
-                'image': image_url  
+                'image': image_url
             })
             
         # ◀ 최종 결과 리스트(final_pill_results)에 
