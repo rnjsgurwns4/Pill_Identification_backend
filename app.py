@@ -15,7 +15,7 @@ import requests
 
 # Celery Task와 외부 API 핸들러를 임포트합니다.
 from tasks import analyze_pill_image_task
-from api_handler import get_pill_details_from_api
+from api_handler import get_pill_details_from_api, get_pill_image_from_api
 from database_handler import load_database, find_match_by_text
 
 load_dotenv()
@@ -175,11 +175,11 @@ def detail():
            
     return jsonify(details)
 
+# --- [수정됨] /search 엔드포인트 (페이지네이션 적용) ---
 @app.route('/search', methods=['GET'])
 def search():
     """
-    (수정됨) 이름, 모양, 색, 각인을 받아 검색하고,
-    API를 조회하여 이미지 URL까지 포함한 2D 리스트로 반환
+    (수정됨) 검색어(없으면 전체)로 DB를 검색하고, 페이지네이션을 적용하여 반환
     """
     # 1. 쿼리 파라미터에서 검색어 추출
     search_name = request.args.get('name', '')
@@ -189,51 +189,63 @@ def search():
     search_form = request.args.get('form', '')
     search_company = request.args.get('company', '')
 
-    # 2. 검색어 유효성 검사
-    if not any([search_name, search_shape, search_color, search_imprint]):
-        return jsonify({'error': '하나 이상의 검색어가 필요합니다.'}), 400
+    # [신규] 페이지네이션 파라미터 추출
+    try:
+        page = int(request.args.get('page', 1))
+        limit = int(request.args.get('limit', 10)) # 한 페이지에 20개씩
+    except ValueError:
+        page = 1
+        limit = 10
+    
+    if page < 1: page = 1
+    if limit < 1: limit = 10
 
-    # 3. DB 로드 상태 확인
+    # 2. DB 로드 상태 확인
     if not pill_db:
          return jsonify({'error': '서버 DB가 로드되지 않았거나 비어있습니다.'}), 500
 
-    # 4. database_handler로 텍스트 검색 (1차 후보군)
+    # 3. database_handler로 텍스트 검색 (전체 후보군)
+    #    (검색어 없으면 600개, 있으면 필터링된 개수 반환)
     initial_candidates = find_match_by_text(
         pill_db,
         name=search_name,
         shape=search_shape,
         color=search_color,
         imprint=search_imprint,
-        form=search_form,         
-        company=search_company   
+        form=search_form,
+        company=search_company
     )
 
-    # 5. [신규] 후보군을 순회하며 API로 이미지 URL 조회
+    # 4. [신규] 페이지네이션 적용
+    total_items = len(initial_candidates)
+    start_index = (page - 1) * limit
+    end_index = page * limit
+    
+    # 5. [신규] 전체 후보군에서 현재 페이지에 해당하는 20개만 잘라냄
+    paginated_candidates = initial_candidates[start_index:end_index]
+
+    # 6. [신규] 잘라낸 20개에 대해서만 API로 이미지 URL 조회
     processed_candidates = []
-    for candidate in initial_candidates:
+    for candidate in paginated_candidates: # ◀◀ paginated_candidates 사용
         item_code = candidate.get('code')
         pill_name = candidate.get('pill_info')
         
-        image_url = ''  # 기본값
-        if item_code and item_code != 'N/A':
-            try:
-                # /detail에서 사용하는 API 핸들러 재사용
-                api_details = get_pill_details_from_api(item_code)
-                if 'error' not in api_details:
-                    image_url = api_details.get('이미지', '') # '이미지' 키로 URL 가져오기
-            except Exception as api_e:
-                print(f"API 호출 중 에러 발생 (검색: {item_code}): {api_e}")
-                image_url = 'API_ERROR'
+        image_url = candidate.get('image_url', '')
         
-        # 요청한 형식({pill_info, code, image})으로 딕셔너리 생성
         processed_candidates.append({
             'pill_info': pill_name,
             'code': item_code,
             'image': image_url
         })
     
-    
-    return jsonify({'pill_results': processed_candidates})
+    # 7. [신규] 페이지네이션 정보와 함께 결과 반환
+    return jsonify({
+        'total_items': total_items,
+        'page': page,
+        'limit': limit,
+        'total_pages': (total_items + limit - 1) // limit, # 총 페이지 수
+        'pill_results': processed_candidates # ◀◀ 20개의 결과
+    })
 
 @app.route('/recent', methods=['GET'])
 def get_recent():
@@ -256,7 +268,7 @@ def get_recent():
         
         # (이하 API 호출 및 결과 조합 로직은 동일)
         for code in item_codes:
-            details = get_pill_details_from_api(code)
+            details = get_pill_image_from_api(code)
 
             if 'error' not in details:
                 pill_results.append({
