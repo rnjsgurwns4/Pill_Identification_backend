@@ -211,109 +211,90 @@ def find_best_match(pill_db, identified_shape_info, identified_colors, identifie
         candidates.append({
             'pill_info': pill_name,  # 목표 1: 'pill_info'에 이름만 저장
             'code': pill_code,      # 목표 1: 'code' 정보 추가
-            'score': score
+            'score': score,
+            'image_url': row.get('image_url', '')
         })
 
     candidates.sort(key=lambda x: x['score'], reverse=True)
     return [c for c in candidates if c['score'] > 0][:10]
 
 
-def calculate_search_score(row, search_name, search_shape, search_color, search_imprint, 
-                           search_form, search_company): # <--- 인자 2개 추가
-    """
-    텍스트 검색어를 기반으로 DB의 row와 점수를 계산합니다.
-    (점수가 높을수록 더 유사함)
-    """
-    score = 0
-    # 점수 가중치 (총 100점) - 새 항목 추가로 가중치 재분배
-    MAX_NAME_SCORE = 30
-    MAX_IMPRINT_SCORE = 25
-    MAX_SHAPE_SCORE = 10
-    MAX_COLOR_SCORE = 10
-    MAX_FORM_SCORE = 15     # <--- '제형' 점수
-    MAX_COMPANY_SCORE = 10  # <--- '제조사' 점수
-
-    # 1. 이름 점수 (기존과 동일)
-    db_name = str(row.get('name', '')).upper()
-    search_name = search_name.upper()
-    if search_name and db_name:
-        dist = levenshtein_distance(search_name, db_name)
-        similarity = max(0, 1 - (dist / max(len(search_name), len(db_name))))
-        score += similarity * MAX_NAME_SCORE
-
-    # 2. 각인 점수 (기존과 동일)
-    search_imprint = search_imprint.upper()
-    if search_imprint:
-        imprint1_db = str(row.get('text', '')).upper()
-        imprint2_db = str(row.get('text2', '')).upper()
-        dist1 = levenshtein_distance(search_imprint, imprint1_db)
-        dist2 = levenshtein_distance(search_imprint, imprint2_db)
-        min_dist = min(dist1, dist2)
-        similarity = max(0, 1 - (min_dist / max(1, len(search_imprint))))
-        score += similarity * MAX_IMPRINT_SCORE
-
-    # 3. 모양 점수 (기존과 동일)
-    db_shape = str(row.get('shape', '')).upper()
-    search_shape = search_shape.upper()
-    if search_shape and db_shape:
-        if search_shape == db_shape: 
-            score += MAX_SHAPE_SCORE
-        # '원'만 쳐도 '원형' 검색되게 처리
-        elif search_shape in db_shape:
-            score += MAX_SHAPE_SCORE * 0.7 # 부분 일치 시 70% 점수
-
-    # 4. 색상 점수 (기존과 동일)
-    db_color = str(row.get('color', ''))
-    search_color = search_color.strip()
-    if search_color and db_color:
-        color_similarity = calculate_color_similarity_score(search_color, db_color)
-        score += color_similarity * MAX_COLOR_SCORE
-
-    # 5. [신규] 제형(form) 점수
-    db_form = str(row.get('form', '')).strip() # 예: "정제"
-    search_form = search_form.strip()
-    if search_form and db_form:
-        # '정'만 쳐도 '정제' 검색되도록 'in' 사용
-        if search_form in db_form:
-            score += MAX_FORM_SCORE
-            
-    # 6. [신규] 제조사(company) 점수
-    # (주)대한, 대한, 대한제약 등 다양하므로 'in' 검색
-    db_company = str(row.get('company', '')).strip() # 예: "(주)대웅제약"
-    search_company = search_company.strip()
-    if search_company and db_company:
-        # 검색어 '대웅'이 db '(주)대웅제약'에 포함되는지 확인
-        if search_company in db_company:
-            score += MAX_COMPANY_SCORE
-
-    return score
 
 
-# --- [신규 추가] 텍스트 검색 메인 함수 ---
 
+# --- [수정됨] 텍스트 검색 메인 함수 (포함 여부 기준) ---
 def find_match_by_text(pill_db, name, shape, color, imprint, 
-                       form, company): # <--- 인자 2개 추가
+                       form, company):
     """
-    텍스트 검색어를 받아 DB에서 가장 유사한 알약 리스트를 반환
+    (수정됨) 텍스트 검색어를 받아 DB에서 '포함하는' 모든 알약 리스트를 반환
+    (점수제 폐지, 포함(containment) 기준으로 변경)
     """
     candidates = []
     
+    # 1. 검색어 정규화 (루프 밖에서 한 번만)
+    search_name = name.upper().strip()
+    search_shape = shape.upper().strip()
+    search_color = color.upper().strip()
+    search_imprint = imprint.upper().strip()
+    search_form = form.upper().strip()
+    search_company = company.upper().strip()
+
+    # 2. '전체 검색'인지 확인
+    all_params_empty = not any([search_name, search_shape, search_color, search_imprint, search_form, search_company])
+
     for row in pill_db:
-        score = calculate_search_score(row, 
-                                     search_name=name, 
-                                     search_shape=shape, 
-                                     search_color=color, 
-                                     search_imprint=imprint,
-                                     search_form=form,       # <--- 전달
-                                     search_company=company  # <--- 전달
-                                     )
         
-        if score > 0:
+        # 3. '전체 검색'이면 score 없이 바로 추가
+        if all_params_empty:
             candidates.append({
                 'pill_info': row.get('name', '알 수 없음'),
                 'code': row.get('code', 'N/A'),
-                'score': round(score, 2)
+                'image_url': row.get('image_url', ''),
+            })
+            continue # 다음 알약으로
+
+        # 4. '조건 검색'이면, 모든 조건이 맞는지(AND) 확인
+        is_match = True
+
+        # DB 값 정규화
+        db_name = str(row.get('name', '')).upper()
+        db_shape = str(row.get('shape', '')).upper()
+        db_color = str(row.get('color', '')).upper()
+        db_imprint1 = str(row.get('text', '')).upper()
+        db_imprint2 = str(row.get('text2', '')).upper()
+        db_form = str(row.get('form', '')).upper()
+        db_company = str(row.get('company', '')).upper()
+
+        # 5. 하나라도 불일치하면 탈락 (is_match = False)
+        # (검색어가 있어야만 검사 수행)
+        if search_name and search_name not in db_name:
+            is_match = False
+        
+        if is_match and search_shape and search_shape not in db_shape:
+            is_match = False
+
+        if is_match and search_color and search_color not in db_color:
+            is_match = False
+        
+        # 각인은 앞면(text) 또는 뒷면(text2) 둘 중 하나만 맞아도 됨
+        if is_match and search_imprint:
+            if (search_imprint not in db_imprint1) and (search_imprint not in db_imprint2):
+                is_match = False
+
+        if is_match and search_form and search_form not in db_form:
+            is_match = False
+
+        if is_match and search_company and search_company not in db_company:
+            is_match = False
+
+        # 6. 모든 조건을 통과했으면 추가
+        if is_match:
+            candidates.append({
+                'pill_info': row.get('name', '알 수 없음'),
+                'code': row.get('code', 'N/A'),
+                'image_url': row.get('image_url', ''),
+                # 'score' 필드 삭제
             })
 
-    candidates.sort(key=lambda x: x['score'], reverse=True)
-    return candidates[:10]
+    # 7. 점수 기반 정렬 삭제
+    return candidates
