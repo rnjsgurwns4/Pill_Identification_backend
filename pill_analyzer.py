@@ -90,9 +90,11 @@ def process_and_visualize_pills(original_image, pill_boxes, shape_model, pill_db
     # 원본 이미지를 복사하여 여기에 그림
     image_with_results = original_image.copy()
     
+    pill_counter = 1
     
 
     for box in pill_boxes:
+        label = f"알약{pill_counter}"
         x1, y1, x2, y2 = box
         cropped_pill = original_image[y1:y2, x1:x2]
         
@@ -102,7 +104,7 @@ def process_and_visualize_pills(original_image, pill_boxes, shape_model, pill_db
         # 분석 결과를 이미지에 그리고 응답 데이터 구성
         if candidate_pills:
             top_candidate = candidate_pills[0]
-            label = f"{top_candidate['pill_info']}"
+            #label = f"{top_candidate['pill_info']}"
             # 결과 이미지에 그리기
             image_with_results = draw_korean_text_on_image(image_with_results, label, (x1, y1), pil_font)
             cv2.rectangle(image_with_results, (x1, y1), (x2, y2), (0, 255, 0), 2)
@@ -113,6 +115,7 @@ def process_and_visualize_pills(original_image, pill_boxes, shape_model, pill_db
         else:
             # 결과 이미지에 그리기
             cv2.rectangle(image_with_results, (x1, y1), (x2, y2), (0, 0, 255), 2)
-            image_with_results = draw_korean_text_on_image(image_with_results, "Unknown", (x1, y1), pil_font)
+            image_with_results = draw_korean_text_on_image(image_with_results, label, (x1, y1), pil_font)
+        pill_counter += 1
     
     return image_with_results, candidates_by_box
