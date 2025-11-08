@@ -12,7 +12,6 @@ def detect_pills(image_path, model_path='weights/detection_model.pt'):
     try:
         # 모델 불러오기
         model_path = 'weights/detection_model.pt'
-        #model_path = 'weights/best.pt'
         model = YOLO(model_path)
         
         # YOLO 예측 실행

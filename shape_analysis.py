@@ -33,11 +33,17 @@ def classify_shape_with_ai(binarized_image, model, target_size=224):
         input_array = img_to_array(input_image_rgb)
         scaled_array = input_array / 255.0
         
-
+        final_input = scaled_array[np.newaxis, ...]
+        print("--- [DEBUG] model.predict() 호출 직전 ---")
+        print(f"  - 모델이 기대하는 Shape: {model.input_shape}")
+        print(f"  - 실제로 전달되는 Shape: {final_input.shape}")
+        print("---")
+        print(f"  - 모델이 기대하는 Dtype: {model.input[0].dtype}")
+        print(f"  - 실제로 전달되는 Dtype: {final_input.dtype}")
         # 6. 예측 실행
         predictions = model.predict(scaled_array[np.newaxis, ...])[0]
-        
-        shape_map = {0: '원형', 1: '육각형', 2:'타원형'} # 모델 학습 시 클래스 순서와 동일해야 함
+        print("model complete") 
+        shape_map = {0: '원형', 1: '타원형', 2:'장방형'} # 모델 학습 시 클래스 순서와 동일해야 함
         
         # 모든 클래스에 대한 신뢰도 문자열 생성
         results = []

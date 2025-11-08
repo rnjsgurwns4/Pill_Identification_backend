@@ -3,33 +3,35 @@ import requests
 import xml.etree.ElementTree as ET
 import os
 from dotenv import load_dotenv
-import base64
+
 # .env 파일에서 환경 변수 로드
 load_dotenv()
 
 # 공공데이터포털에서 발급받은 일반 인증키를 입력
 API_KEY=os.getenv("GO_DATA_API_KEY").strip()
-# --------------------------------------------------------------------
+
 
 def _get_pill_identification_info(item_code):
     """
-    (헬퍼) 낱알식별정보 API를 호출하여 장축, 단축, 두께, 성상 정보를 가져옵니다.
+    낱알식별정보 API를 호출하여 장축, 단축, 두께, 성상 정보를 가져옴
     """
     if not API_KEY:
-        return {'error': '.env 파일에 GO_DATA_API_KEY를 설정해주세요.'}
+        return {'error': '.env 파일에 GO_DATA_API_KEY를 설정해주세요.'} # 에러
 
     # 낱알식별정보 API 서비스 URL
     url = 'http://apis.data.go.kr/1471000/MdcinGrnIdntfcInfoService02/getMdcinGrnIdntfcInfoList02'
     params = {
-        'ServiceKey': API_KEY,
-        'itemSeq': item_code,
+        'serviceKey': API_KEY,
+        'item_seq': item_code,
         'type': 'xml'
     }
 
     try:
+        # 요청 빋기
         response = requests.get(url, params=params)
         response.raise_for_status()
 
+        # XML 파싱
         root = ET.fromstring(response.content)
         
         result_code_element = root.find('header/resultCode')
@@ -41,7 +43,7 @@ def _get_pill_identification_info(item_code):
         if item is None:
             return {} # 정보가 없으면 빈 딕셔너리 반환
 
-        # 필요한 정보(장축, 단축, 두께, 성상) 추출
+        # 필요한 정보 추출
         id_info = {
             '장축': item.find('LENG_LONG').text if item.find('LENG_LONG') is not None else '',
             '단축': item.find('LENG_SHORT').text if item.find('LENG_SHORT') is not None else '',
@@ -61,38 +63,13 @@ def _get_pill_identification_info(item_code):
         return {}
     
 
-def encode_image_from_url_to_base64(image_url):
-    """
-    이미지 다운로드 URL을 받아, 이미지를 다운로드하고
-    Base64 데이터 URL 문자열로 반환합니다.
-    <img src="...">에 바로 사용할 수 있습니다.
-    """
-    if not image_url:
-        return ""
-    
-    try:
-        response = requests.get(image_url)
-        response.raise_for_status() # 에러가 있으면 예외 발생
-
-        # MIME 타입 확인 (예: 'image/jpeg')
-        mime_type = response.headers.get('Content-Type', 'image/jpeg')
-        
-        # Base64로 인코딩
-        base64_data = base64.b64encode(response.content).decode('utf-8')
-        
-        # 데이터 URL 형식으로 반환
-        return f"data:{mime_type};base64,{base64_data}"
-        
-    except requests.exceptions.RequestException as e:
-        print(f"이미지 다운로드 실패 (URL: {image_url}): {e}")
-        return "" # 실패 시 빈 문자열 반환
 
 def get_pill_details_from_api(item_code):
     """
     공공데이터포털 API를 호출하여 품목기준코드로 알약 상세 정보를 조회
     """
     if not API_KEY:
-        return {'error': '.env 파일에 GO_DATA_API_KEY를 설정해주세요.'}
+        return {'error': '.env 파일에 GO_DATA_API_KEY를 설정해주세요.'} # 에러
 
     url = 'http://apis.data.go.kr/1471000/DrbEasyDrugInfoService/getDrbEasyDrugList'
     params = {
@@ -109,8 +86,6 @@ def get_pill_details_from_api(item_code):
 
         # XML 응답 파싱
         root = ET.fromstring(response.content)
-        xml_content = ET.tostring(root, encoding='utf-8').decode('utf-8')
-        print(xml_content)
         
         # header에서 결과 코드 확인
         result_code_element = root.find('header/resultCode')
@@ -118,13 +93,14 @@ def get_pill_details_from_api(item_code):
             result_code = result_code_element.text
         else:
             # resultCode 태그를 찾지 못했을 때의 처리
-            return {'error': 'API 응답 형식이 올바르지 않습니다.'}
+            return {'error': 'API 응답 형식이 올바르지 않습니다.'} # 에러
+        
         if result_code != '00':
-            return {'error': f"API 오류: {root.find('header/resultMsg').text}"}
+            return {'error': f"API 오류: {root.find('header/resultMsg').text}"} # 에러
             
         item = root.find('body/items/item')
         if item is None:
-            return {'error': '해당 품목기준코드에 대한 정보가 없습니다.'}
+            return {'error': '해당 품목기준코드에 대한 정보가 없습니다.'} # 에러
 
         # 필요한 정보만 추출하여 딕셔너리로 반환 (None일 경우 빈 문자열 처리)
         details = {
@@ -141,25 +117,26 @@ def get_pill_details_from_api(item_code):
     
 
     except requests.exceptions.RequestException as e:
-        return {'error': f'API 요청 실패: {e}'}
+        return {'error': f'API 요청 실패: {e}'} # 에러
     except ET.ParseError as e:
-        return {'error': f'XML 파싱 실패: {e}'}
+        return {'error': f'XML 파싱 실패: {e}'} # 에러
     
+    # 부가정보 추출
     id_info = _get_pill_identification_info(item_code)
     
-    # 3. (신규) 두 딕셔너리 병합
-    # id_info의 내용을 details 딕셔너리에 추가합니다.
+    # 두 딕셔너리 병합
     details.update(id_info)
     
     # 4. (수정) 병합된 딕셔너리 반환
     return details
+
     
 def get_pill_image_from_api(item_code):
     """
     공공데이터포털 API를 호출하여 품목기준코드로 알약 상세 정보를 조회
     """
     if not API_KEY:
-        return {'error': '.env 파일에 GO_DATA_API_KEY를 설정해주세요.'}
+        return {'error': '.env 파일에 GO_DATA_API_KEY를 설정해주세요.'} # 에러
 
     url = 'http://apis.data.go.kr/1471000/DrbEasyDrugInfoService/getDrbEasyDrugList'
     params = {
@@ -176,8 +153,6 @@ def get_pill_image_from_api(item_code):
 
         # XML 응답 파싱
         root = ET.fromstring(response.content)
-        xml_content = ET.tostring(root, encoding='utf-8').decode('utf-8')
-        print(xml_content)
         
         # header에서 결과 코드 확인
         result_code_element = root.find('header/resultCode')
@@ -185,13 +160,14 @@ def get_pill_image_from_api(item_code):
             result_code = result_code_element.text
         else:
             # resultCode 태그를 찾지 못했을 때의 처리
-            return {'error': 'API 응답 형식이 올바르지 않습니다.'}
+            return {'error': 'API 응답 형식이 올바르지 않습니다.'} # 에러
+        
         if result_code != '00':
-            return {'error': f"API 오류: {root.find('header/resultMsg').text}"}
+            return {'error': f"API 오류: {root.find('header/resultMsg').text}"} # 에러
             
         item = root.find('body/items/item')
         if item is None:
-            return {'error': '해당 품목기준코드에 대한 정보가 없습니다.'}
+            return {'error': '해당 품목기준코드에 대한 정보가 없습니다.'} # 에러
 
         # 필요한 정보만 추출하여 딕셔너리로 반환 (None일 경우 빈 문자열 처리)
         details = {
@@ -201,7 +177,7 @@ def get_pill_image_from_api(item_code):
         return details
 
     except requests.exceptions.RequestException as e:
-        return {'error': f'API 요청 실패: {e}'}
+        return {'error': f'API 요청 실패: {e}'} # 에러
     except ET.ParseError as e:
-        return {'error': f'XML 파싱 실패: {e}'}
+        return {'error': f'XML 파싱 실패: {e}'} # 에러
 

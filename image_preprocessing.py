@@ -1,34 +1,39 @@
-
-
 import cv2
 import numpy as np
+import logging
 
 
-# --- GrabCut 알고리즘 기반 배경 제거 ---
-def remove_background(pill_image):
+def remove_background(cropped_image):
     """
-    GrabCut 알고리즘을 사용하여 내부 질감이 복잡하거나 배경과 색이 비슷한
-    이미지에서도 알약을 정교하게 분리
+    GrabCut 알고리즘을 사용하여 이미 잘라낸 알약 이미지에서 배경을 제거합니다.
     """
-    # 이미지가 존재하지 않을 경우, 빈 검은 화면 반환
-    if pill_image is None or pill_image.size == 0:
-        blank_mask = np.zeros((100, 100), dtype="uint8")
-        blank_image = np.zeros((100, 100, 3), dtype="uint8")
-        return blank_image, blank_mask
-    
-    
-    # 마스크: 객체와 배경을 구분하는 정보를 저장할 행렬. 0으로 초기화
-    # bgdModel, fgdModel: 배경과 전경의 색상 분포 모델을 저장할 임시 배열
-    mask = np.zeros(pill_image.shape[:2], np.uint8)
+    """
+    try:
+        h, w = cropped_image.shape[:2]
+        if h < 10 or w < 10: return cropped_image, np.zeros((h, w), np.uint8)
+        mask = np.zeros(cropped_image.shape[:2], np.uint8)
+        bgdModel = np.zeros((1, 65), np.float64)
+        fgdModel = np.zeros((1, 65), np.float64)
+        rect = (int(w * 0.05), int(h * 0.05), int(w * 0.9), int(h * 0.9))
+        cv2.grabCut(cropped_image, mask, rect, bgdModel, fgdModel, 5, cv2.GC_INIT_WITH_RECT)
+        mask2 = np.where((mask == 2) | (mask == 0), 0, 1).astype('uint8')
+        result_image = cropped_image * mask2[:, :, np.newaxis]
+        return result_image, mask2
+    except Exception as e:
+        logging.error(f"배경 제거 중 오류 발생: {e}", exc_info=True)
+        h, w = cropped_image.shape[:2]
+        return cropped_image, np.zeros((h, w), np.uint8)
+    """
+    mask = np.zeros(cropped_image.shape[:2], np.uint8)
     bgdModel = np.zeros((1, 65), np.float64)
     fgdModel = np.zeros((1, 65), np.float64)
     
     # 이미지의 가로나 세로가 너무 작으면 Otsu 이진화를 사용
-    h, w = pill_image.shape[:2]
+    h, w = cropped_image.shape[:2]
     if h < 20 or w < 20:
-        gray = cv2.cvtColor(pill_image, cv2.COLOR_BGR2GRAY) #흑백화
+        gray = cv2.cvtColor(cropped_image, cv2.COLOR_BGR2GRAY) #흑백화
         _, final_mask = cv2.threshold(gray, 0, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)
-        result = cv2.bitwise_and(pill_image, pill_image, mask=final_mask)
+        result = cv2.bitwise_and(cropped_image, cropped_image, mask=final_mask)
         return result, final_mask
 
     # 알약이 이미지에 꽉 차 있을 것을 대비해, 마진을 1픽셀로 최소화
@@ -36,13 +41,13 @@ def remove_background(pill_image):
 
     # GrabCut 알고리즘 실행
     try:
-        cv2.grabCut(pill_image, mask, rect, bgdModel, fgdModel, 5, cv2.GC_INIT_WITH_RECT)
+        cv2.grabCut(cropped_image, mask, rect, bgdModel, fgdModel, 5, cv2.GC_INIT_WITH_RECT)
     # 실패 시 Otsu 이진화
     except Exception as e:
         print(f"    - GrabCut 실패: {e}. Otsu 방식으로 전환합니다.")
-        gray = cv2.cvtColor(pill_image, cv2.COLOR_BGR2GRAY)
+        gray = cv2.cvtColor(cropped_image, cv2.COLOR_BGR2GRAY)
         _, final_mask = cv2.threshold(gray, 0, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)
-        result = cv2.bitwise_and(pill_image, pill_image, mask=final_mask)
+        result = cv2.bitwise_and(cropped_image, cropped_image, mask=final_mask)
         return result, final_mask
 
     # 0: 확실한 배경, 2: 아마도 배경 -> 0 (배경)으로 변경
@@ -59,39 +64,91 @@ def remove_background(pill_image):
     final_mask = cv2.morphologyEx(final_mask, cv2.MORPH_CLOSE, kernel, iterations=2)
     
     
-    result = pill_image * final_mask[:, :, np.newaxis]
+    result = cropped_image * final_mask[:, :, np.newaxis]
     
     final_mask_255 = final_mask * 255
     
     return result, final_mask_255
-
-
-# 안 씀(깃허브에서 삭제하기)
-# --- ★ 수정된 부분: 그레이스케일 기반 각인 전처리 함수에 노이즈 제거 추가 ---
-def preprocess_for_imprint(original_pill_image, pill_mask):
-    """
-    원본 알약 이미지와 마스크를 사용하여 각인을 강조하는 전처리를 수행합니다.
-    """
-    gray = cv2.cvtColor(original_pill_image, cv2.COLOR_BGR2GRAY)
-    equalized = cv2.equalizeHist(gray)
-    denoised = cv2.GaussianBlur(equalized, (3, 3), 0)
     
-    kernel = cv2.getStructuringElement(cv2.MORPH_RECT, (15, 5))
-    blackhat = cv2.morphologyEx(denoised, cv2.MORPH_BLACKHAT, kernel)
+
+def preprocess_for_dark_text(image, pill_mask):
     """
-    # 이진화(Thresholding)를 통해 희미한 글자를 선명한 흰색으로 만듭니다.
-    _, thresholded = cv2.threshold(blackhat, 0, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)
-    
-    # ★★★ 추가된 부분: 형태학적 열림(Opening) 연산으로 노이즈 제거 ★★★
-    # 작은 커널을 사용하여 이미지에서 작은 점 같은 노이즈를 제거합니다.
-    opening_kernel = np.ones((3, 3), np.uint8)
-    opened = cv2.morphologyEx(thresholded, cv2.MORPH_OPEN, opening_kernel, iterations=1)
+    [전문 함수 1] 밝은 표면의 '어두운' 각인 (음각/그림자) 추출용.
+    어두운 부분을 찾아 흰색으로(THRESH_BINARY_INV) 변환합니다.
     """
-    
-    # 최종적으로 마스크를 적용하여 배경(알약이 아닌 부분)을 제거
-    imprint_only = cv2.bitwise_and(blackhat, blackhat, mask=pill_mask)
-    
-    return imprint_only
+    try:
+        gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+        blurred = cv2.GaussianBlur(gray, (5, 5), 0)
+
+        # 어두운 각인을 흰색으로 강조
+        thresh = cv2.adaptiveThreshold(
+            blurred, 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C,
+            cv2.THRESH_BINARY_INV, 19, 9  # 블록 크기 및 C값 조정
+        )
+
+        # 마스크를 적용하여 알약 영역만 남김
+        masked_image = cv2.bitwise_and(thresh, thresh, mask=pill_mask)
+
+        # Tesseract가 잘 읽도록 노이즈 제거 및 글씨 굵게
+        kernel = np.ones((2, 2), np.uint8)
+        cleaned = cv2.morphologyEx(masked_image, cv2.MORPH_OPEN, kernel, iterations=1)
+
+        # Tesseract는 (검은 글씨 / 흰 배경)을 선호하므로 반전시킴
+        final_image = cv2.bitwise_not(cleaned)
+        return final_image
+    except Exception as e:
+        logging.error(f"어두운 각인 전처리 중 오류: {e}", exc_info=True)
+        return np.full_like(image, 255, dtype=np.uint8)  # 오류 시 흰색 이미지 반환
 
 
+def preprocess_for_bright_text(image, pill_mask):
+    """
+    [전문 함수 2] 어두운 표면의 '밝은' 각인 (인쇄) 추출용.
+    밝은 부분을 찾아 흰색으로(THRESH_BINARY) 변환합니다.
+    """
+    try:
+        gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+        blurred = cv2.GaussianBlur(gray, (5, 5), 0)
 
+        # 밝은 각인을 흰색으로 강조
+        thresh = cv2.adaptiveThreshold(
+            blurred, 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C,
+            cv2.THRESH_BINARY, 19, 9  # 블록 크기 및 C값 조정
+        )
+
+        # 마스크를 적용하여 알약 영역만 남김
+        masked_image = cv2.bitwise_and(thresh, thresh, mask=pill_mask)
+
+        # Tesseract가 잘 읽도록 노이즈 제거 및 글씨 굵게
+        kernel = np.ones((2, 2), np.uint8)
+        cleaned = cv2.morphologyEx(masked_image, cv2.MORPH_OPEN, kernel, iterations=1)
+
+        # Tesseract는 (검은 글씨 / 흰 배경)을 선호하므로 반전시킴
+        final_image = cv2.bitwise_not(cleaned)
+        return final_image
+    except Exception as e:
+        logging.error(f"밝은 각인 전처리 중 오류: {e}", exc_info=True)
+        return np.full_like(image, 255, dtype=np.uint8)  # 오류 시 흰색 이미지 반환
+
+
+def preprocess_image(image_path):
+    """
+    이미지 경로를 입력받아 이미지를 로드합니다.
+    """
+    try:
+        image = cv2.imread(image_path)
+        if image is None:
+            logging.error(f"이미지를 불러올 수 없습니다: {image_path}")
+            return None
+        return image
+    except Exception as e:
+        logging.error(f"이미지 로딩 중 오류 발생: {e}", exc_info=True)
+        return None
+
+
+# `preprocess_for_tesseract` 함수는 `imprint_analysis.py`에서
+# 더 이상 호출하지 않으므로 삭제하거나 주석 처리해도 됩니다.
+# 여기서는 하위 호환성을 위해 남겨두되, 내용은 비워둡니다.
+def preprocess_for_tesseract(image, pill_mask):
+    logging.warning("이 함수(preprocess_for_tesseract)는 사용되지 않아야 합니다. imprint_analysis.py를 확인하세요.")
+    return np.full_like(image, 255, dtype=np.uint8)

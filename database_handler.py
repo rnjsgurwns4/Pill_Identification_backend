@@ -2,6 +2,7 @@
 
 import pandas as pd
 import numpy as np
+from fuzzywuzzy import fuzz
 
 # 색상명과 RGB 값 매핑 (수정/추가 가능)
 # 데이터베이스에 있는 다른 색상(예: '투명', '자홍')이 있다면 여기에 추가해주세요.
@@ -106,40 +107,55 @@ def calculate_score(row, shape_probabilities, colors, imprint):
         # 확률값(%)을 100으로 나누어 0~1 사이의 값으로 변환
         probability = shape_probabilities[db_shape] / 100.0
         shape_score = MAX_SHAPE_SCORE * probability
-        score += shape_score
-    #
+    score += shape_score
+    """
     if isinstance(colors, list):
         colors_str = " ".join(colors)
     else:
         colors_str = colors # 이미 string인 경우 (예: 텍스트 검색)
     color_similarity = calculate_color_similarity_score(colors_str, row['color'])
-    #
+    """
     # 2. 색상 점수: 색상 유사도에 따라 점수 부여 (0~30점)
-    #color_similarity = calculate_color_similarity_score(colors, row['color'])
+    color_similarity = calculate_color_similarity_score(colors, row['color'])
     score += color_similarity * MAX_COLOR_SCORE
 
-    # 3. 각인 점수 계산
-    imprint_recognized = imprint.upper()
+    # --- 각인 점수 계산 로직 수정 ---
+    imprint_recognized = imprint.upper().strip()
+    imprint_score = 0
 
-    if not imprint_recognized:
-        imprint_score = 0
-    else:
-        imprint1_db = str(row.get('text', '')).upper()
-        imprint2_db = str(row.get('text2', '')).upper()
+    # DB 각인 정보 정리 ('nan' 제거)
+    imprint1_db = str(row.get('text', '')).upper().replace('NAN', '').strip()
+    imprint2_db = str(row.get('text2', '')).upper().replace('NAN', '').strip()
+    db_imprint_full = (imprint1_db + " " + imprint2_db).strip()
 
-        dist1 = levenshtein_distance(imprint_recognized, imprint1_db)
-        dist2 = levenshtein_distance(imprint_recognized, imprint2_db)
+    if imprint_recognized:
+        # 3-1. 탐지된 각인이 있는 경우
+        if db_imprint_full:
+            # DB에도 각인이 있으면 유사도 계산
 
-        min_dist = min(dist1, dist2)
+            # 앞면, 뒷면 각각의 부분 일치 점수 계산
+            similarity1 = fuzz.partial_ratio(imprint_recognized, imprint1_db) if imprint1_db else 0
+            similarity2 = fuzz.partial_ratio(imprint_recognized, imprint2_db) if imprint2_db else 0
 
-        db_imprint_to_compare = imprint1_db if dist1 <= dist2 else imprint2_db
-        recognized_type = get_char_type(imprint_recognized)
-        db_type = get_char_type(db_imprint_to_compare)
+            # DB 앞면+뒷면 합친 것과도 비교
+            similarity_full = fuzz.partial_ratio(imprint_recognized, db_imprint_full)
 
-        if recognized_type in ["alpha", "numeric"] and db_type in ["alpha", "numeric"] and recognized_type != db_type:
-            imprint_score = 0
+
+            # 가장 높은 유사도 점수를 채택
+            max_similarity = max(similarity1, similarity2, similarity_full)
+
+            # 0~100점 스케일의 유사도를 0~MAX_IMPRINT_SCORE (40점) 스케일로 변환
+            imprint_score = (max_similarity / 100.0) * MAX_IMPRINT_SCORE
         else:
-            imprint_score = max(0, MAX_IMPRINT_SCORE - (min_dist * 10))
+            # 탐지 각인은 있으나 DB 각인이 없으면 0점
+            imprint_score = 0
+
+    elif not db_imprint_full:
+        # 3-2. 탐지된 각인도 없고, DB 각인도 없으면 10점 보너스
+        # (각인이 없는 알약끼리 일치)
+        imprint_score = 10
+
+        # 3-3. (탐지 각인은 없으나 DB 각인이 있는 경우 -> 0점)
 
     score += imprint_score
     return score
@@ -184,19 +200,31 @@ def find_best_match(pill_db, identified_shape_info, identified_colors, identifie
                 continue  # 파싱에 실패하는 경우(예: '(A)...' 등)는 무시
     elif isinstance(identified_shape_info, dict):
         shape_probabilities = identified_shape_info
+    if not shape_probabilities:
+        print("  - [경고] 모양 확률 정보가 파싱되지 않았습니다. 모양 점수가 0이 됩니다.")
 
     primary_candidates = []
     for row in pill_db:
         # shape_probabilities의 키(모양 이름)를 기준으로 후보군 필터링
         shape_match = row['shape'] in shape_probabilities
-        #color_match = any(color in row['color'] for color in identified_colors.split())
-        color_match = any(color in row['color'] for color in identified_colors)
-        if shape_match or color_match:
+
+        # (수정) identified_colors가 비어있을 수 있으므로 split() 전 확인
+        color_list = identified_colors.split() if identified_colors else []
+        color_match = any(color in row['color'] for color in color_list)
+
+        # 모양이나 색상 중 하나라도 관련이 있거나, 각인이라도 관련있으면 후보군에 포함
+        imprint_match = False
+        if identified_imprint and (
+                identified_imprint in str(row.get('text', '')) or identified_imprint in str(row.get('text2', ''))):
+            imprint_match = True
+
+        if shape_match or color_match or imprint_match:
             primary_candidates.append(row)
 
     if not primary_candidates:
-        print("  - [검색 실패] 데이터베이스에서 어떤 후보도 찾을 수 없습니다.")
-        return []
+        # 필터링 실패 시 전체 DB를 대상으로 검색 시도
+        print("  - [알림] 1차 필터링 후보가 없습니다. 전체 DB를 대상으로 점수를 계산합니다.")
+        primary_candidates = pill_db
 
     candidates = []
     for row in primary_candidates:
@@ -222,16 +250,15 @@ def find_best_match(pill_db, identified_shape_info, identified_colors, identifie
 
 
 
-# --- [수정됨] 텍스트 검색 메인 함수 (포함 여부 기준) ---
+# --- 텍스트 검색 메인 함수 (포함 여부 기준) ---
 def find_match_by_text(pill_db, name, shape, color, imprint, 
                        form, company):
     """
-    (수정됨) 텍스트 검색어를 받아 DB에서 '포함하는' 모든 알약 리스트를 반환
-    (점수제 폐지, 포함(containment) 기준으로 변경)
+    텍스트 검색어를 받아 DB에서 '포함하는' 모든 알약 리스트를 반환
     """
     candidates = []
     
-    # 1. 검색어 정규화 (루프 밖에서 한 번만)
+    # 검색어 정규화 (루프 밖에서 한 번만)
     search_name = name.upper().strip()
     search_shape = shape.upper().strip()
     search_color = color.upper().strip()
@@ -239,12 +266,12 @@ def find_match_by_text(pill_db, name, shape, color, imprint,
     search_form = form.upper().strip()
     search_company = company.upper().strip()
 
-    # 2. '전체 검색'인지 확인
+    # '전체 검색'인지 확인
     all_params_empty = not any([search_name, search_shape, search_color, search_imprint, search_form, search_company])
 
     for row in pill_db:
         
-        # 3. '전체 검색'이면 score 없이 바로 추가
+        # '전체 검색'이면 score 없이 바로 추가
         if all_params_empty:
             candidates.append({
                 'pill_info': row.get('name', '알 수 없음'),
@@ -253,7 +280,7 @@ def find_match_by_text(pill_db, name, shape, color, imprint,
             })
             continue # 다음 알약으로
 
-        # 4. '조건 검색'이면, 모든 조건이 맞는지(AND) 확인
+        # '조건 검색'이면, 모든 조건이 맞는지(AND) 확인
         is_match = True
 
         # DB 값 정규화
@@ -265,7 +292,7 @@ def find_match_by_text(pill_db, name, shape, color, imprint,
         db_form = str(row.get('form', '')).upper()
         db_company = str(row.get('company', '')).upper()
 
-        # 5. 하나라도 불일치하면 탈락 (is_match = False)
+        # 하나라도 불일치하면 탈락 (is_match = False)
         # (검색어가 있어야만 검사 수행)
         if search_name and search_name not in db_name:
             is_match = False
@@ -287,14 +314,12 @@ def find_match_by_text(pill_db, name, shape, color, imprint,
         if is_match and search_company and search_company not in db_company:
             is_match = False
 
-        # 6. 모든 조건을 통과했으면 추가
+        # 모든 조건을 통과했으면 추가
         if is_match:
             candidates.append({
                 'pill_info': row.get('name', '알 수 없음'),
                 'code': row.get('code', 'N/A'),
                 'image_url': row.get('image_url', ''),
-                # 'score' 필드 삭제
             })
 
-    # 7. 점수 기반 정렬 삭제
     return candidates

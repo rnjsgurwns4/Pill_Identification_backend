@@ -6,11 +6,17 @@ from PIL import ImageFont, Image, ImageDraw
 
 # 로컬 모듈 임포트
 from image_preprocessing import remove_background
-from color_analysis import get_dominant_color
+from color_analysis import analyze_pill_colors
 from shape_analysis import classify_shape_with_ai
 from database_handler import find_best_match
-from imprint_analysis import get_imprint
+from imprint_analysis import get_imprint as get_imprint_tesseract
+from imprint_analysis_google import analyze_imprint_google 
 
+from dotenv import load_dotenv
+
+load_dotenv()
+OCR_ENGINE = "google"
+DEBUG_MODE = False
 # --- 유틸리티 함수를 app.py에서 여기로 이동 ---
 def draw_korean_text_on_image(image, text, position, pil_font):
     """ Pillow를 사용하여 이미지에 한글 텍스트를 그림 """
@@ -32,13 +38,16 @@ def analyze_single_pill(cropped_pill_image, shape_model, pill_db):
     """ 하나의 잘라낸 알약 이미지에 대해 전체 분석 파이프라인을 실행 """
     
     pill_without_bg, pill_mask = remove_background(cropped_pill_image.copy())
-
+    all_shape_results = []
+    all_color_sets = set()
+    all_imprint_texts = []
     try:
         
-        _, color_candidates = get_dominant_color(pill_without_bg)
+        rgb_list, color_list = analyze_pill_colors(pill_without_bg)
+        all_color_sets.update(color_list)
         
         gray_pill = cv2.cvtColor(pill_without_bg, cv2.COLOR_BGR2GRAY)
-        _, binarized_image = cv2.threshold(gray_pill, 10, 255, cv2.THRESH_BINARY)
+        _, binarized_image = cv2.threshold(gray_pill, 1, 255, cv2.THRESH_BINARY)
         smoothed_binarized_image = binarized_image.copy()
 
         
@@ -59,7 +68,7 @@ def analyze_single_pill(cropped_pill_image, shape_model, pill_db):
         if shape_model:
             
             shape_result = classify_shape_with_ai(smoothed_binarized_image, shape_model)
-            
+            all_shape_results.append(shape_result)
     
        
 
@@ -71,11 +80,30 @@ def analyze_single_pill(cropped_pill_image, shape_model, pill_db):
 
 
     print("--- [4/5] 각인 및 DB 조회 시작 ---")
-    imprint_text = get_imprint(cropped_pill_image.copy(), pill_mask)
+    imprint_text = ""
+    if OCR_ENGINE == "google":
+            
+        imprint_text = analyze_imprint_google(cropped_pill_image.copy())
+
+    elif OCR_ENGINE == "tesseract":
+            
+        imprint_text = get_imprint_tesseract(cropped_pill_image.copy(), pill_mask, debug=DEBUG_MODE)
+    else:
+            print(f"  - [오류] OCR_ENGINE 설정이 잘못되었습니다: {OCR_ENGINE}")
+
+    print(f"  - 인식된 각인: '{imprint_text}'")
+    if imprint_text:  # 빈 각인이 아니면 종합 리스트에 추가
+        all_imprint_texts.append(imprint_text)
+    combined_imprint = " ".join(sorted(list(set(all_imprint_texts))))
+    combined_colors = " ".join(sorted(list(all_color_sets)))
+    combined_shape_info = ""
+    if all_shape_results:
+        combined_shape_info = all_shape_results[0]
+    print(combined_imprint, combined_colors, combined_shape_info)
+        
+    final_candidate_pills = find_best_match(pill_db, combined_shape_info, combined_colors, combined_imprint)
     
-    candidate_pills = find_best_match(pill_db, shape_result, color_candidates, imprint_text)
-    
-    return candidate_pills
+    return final_candidate_pills
 
 # --- app.py의 for 루프 로직을 담당할 새로운 메인 함수 ---
 def process_and_visualize_pills(original_image, pill_boxes, shape_model, pill_db, pil_font):
@@ -103,9 +131,7 @@ def process_and_visualize_pills(original_image, pill_boxes, shape_model, pill_db
         
         # 분석 결과를 이미지에 그리고 응답 데이터 구성
         if candidate_pills:
-            top_candidate = candidate_pills[0]
-            #label = f"{top_candidate['pill_info']}"
-            # 결과 이미지에 그리기
+
             image_with_results = draw_korean_text_on_image(image_with_results, label, (x1, y1), pil_font)
             cv2.rectangle(image_with_results, (x1, y1), (x2, y2), (0, 255, 0), 2)
             
