@@ -50,8 +50,8 @@ def _get_pill_identification_info(item_code):
             '두께': item.find('THICK').text if item.find('THICK') is not None else '',
             '각인_1': item.find('PRINT_FRONT').text if item.find('PRINT_FRONT') is not None else '',
             '각인_2': item.find('PRINT_BACK').text if item.find('PRINT_BACK') is not None else '',
-            '색_1': item.find('COLOR_CLASS1').text if item.find('COLOR_CLASS2') is not None else '',
-            '색_2': item.find('COLOR_CLASS1').text if item.find('COLOR_CLASS2') is not None else '',
+            '색_1': item.find('COLOR_CLASS1').text if item.find('COLOR_CLASS1') is not None else '',
+            '색_2': item.find('COLOR_CLASS2').text if item.find('COLOR_CLASS2') is not None else '',
             '모양': item.find('DRUG_SHAPE').text if item.find('DRUG_SHAPE') is not None else '',
             '형태': item.find('FORM_CODE_NAME').text if item.find('FORM_CODE_NAME') is not None else '',
         }

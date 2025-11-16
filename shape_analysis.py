@@ -44,7 +44,7 @@ def classify_shape_with_ai(binarized_image, model, target_size=224):
         predictions = model.predict(scaled_array[np.newaxis, ...])[0]
         print("model complete") 
         shape_map = {0: '원형', 1: '타원형', 2:'장방형'} # 모델 학습 시 클래스 순서와 동일해야 함
-        
+        """
         # 모든 클래스에 대한 신뢰도 문자열 생성
         results = []
         for i, confidence in enumerate(predictions):
@@ -56,6 +56,16 @@ def classify_shape_with_ai(binarized_image, model, target_size=224):
         
         # 문자열로 변환하여 반환
         return ", ".join([f"{name} ({conf:.2%})" for name, conf in results])
+        """  
+        results_list = []
+        for i, confidence in enumerate(predictions):
+            shape_name = shape_map.get(i, f"unknown_{i}")
+            results_list.append((shape_name, float(confidence))) # 튜플로 저장
+        
+
+        results_list.sort(key=lambda x: x[1], reverse=True)
+
+        return results_list
         
     except Exception as e:
         print(f"    - 모양 분류 모델 로딩 또는 예측 실패: {e}")

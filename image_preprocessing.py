@@ -7,7 +7,7 @@ def remove_background(cropped_image):
     """
     GrabCut 알고리즘을 사용하여 이미 잘라낸 알약 이미지에서 배경을 제거합니다.
     """
-    """
+    
     try:
         h, w = cropped_image.shape[:2]
         if h < 10 or w < 10: return cropped_image, np.zeros((h, w), np.uint8)
@@ -69,7 +69,7 @@ def remove_background(cropped_image):
     final_mask_255 = final_mask * 255
     
     return result, final_mask_255
-    
+    """
 
 def preprocess_for_dark_text(image, pill_mask):
     """

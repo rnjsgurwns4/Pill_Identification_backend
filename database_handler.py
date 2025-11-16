@@ -7,14 +7,17 @@ from fuzzywuzzy import fuzz
 # 색상명과 RGB 값 매핑 (수정/추가 가능)
 # 데이터베이스에 있는 다른 색상(예: '투명', '자홍')이 있다면 여기에 추가해주세요.
 COLOR_RGB_MAP = {
-    '하양': [255, 255, 255], '검정': [0, 0, 0], '회색': [128, 128, 128],
-    '빨강': [255, 0, 0], '주황': [255, 165, 0], '노랑': [255, 255, 0],
-    '초록': [0, 128, 0], '파랑': [0, 0, 255], '남색': [0, 0, 128],
-    '보라': [128, 0, 128], '분홍': [255, 192, 203], '갈색': [165, 42, 42],
+    '하양': [255, 255, 255],  '검정': [0, 0, 0],        '회색': [149, 165, 166],
+    '빨강': [231, 76, 60],    '주황': [230, 126, 34],   '노랑': [241, 196, 15],
+    '초록': [39, 174, 96],    '파랑': [52, 152, 219],   '남색': [0, 0, 128],
+    '보라': [142, 68, 173],   '분홍': [218, 132, 136],  '갈색': [160, 82, 45], '살구': [240, 190, 160]
 }
 
 # RGB 색 공간에서 이론상 가장 먼 거리
 MAX_COLOR_DIST = np.sqrt(255 ** 2 * 3)
+
+# 색상 유사도 0점을 받을 기준 거리 (이 값보다 멀어지면 0점)
+EFFECTIVE_COLOR_DIST = 120.0
 
 
 def get_color_distance(color_name1, color_name2):
@@ -50,7 +53,7 @@ def calculate_color_similarity_score(identified_colors_str, db_colors_str):
                 similarity = 1.0
             else:
                 distance = get_color_distance(id_color, db_color)
-                similarity = max(0, 1 - (distance / MAX_COLOR_DIST))
+                similarity = max(0, 1 - (distance / EFFECTIVE_COLOR_DIST))
 
             if similarity > max_similarity_for_color:
                 max_similarity_for_color = similarity
@@ -96,9 +99,9 @@ def calculate_score(row, shape_probabilities, colors, imprint):
     (점수가 높을수록 더 유사함)
     """
     score = 0
-    MAX_SHAPE_SCORE = 30
-    MAX_COLOR_SCORE = 30
-    MAX_IMPRINT_SCORE = 40
+    MAX_SHAPE_SCORE = 25
+    MAX_COLOR_SCORE = 25
+    MAX_IMPRINT_SCORE = 50
 
     # 1. 모양 점수: AI의 예측 확률에 따라 가중치 부여
     shape_score = 0
@@ -146,6 +149,8 @@ def calculate_score(row, shape_probabilities, colors, imprint):
 
             # 0~100점 스케일의 유사도를 0~MAX_IMPRINT_SCORE (40점) 스케일로 변환
             imprint_score = (max_similarity / 100.0) * MAX_IMPRINT_SCORE
+            if max_similarity > 95:
+                imprint_score += 20  # 20점 추가
         else:
             # 탐지 각인은 있으나 DB 각인이 없으면 0점
             imprint_score = 0
