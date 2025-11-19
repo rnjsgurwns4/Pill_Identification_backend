@@ -12,9 +12,6 @@ API_KEY=os.getenv("GO_DATA_API_KEY").strip()
 
 
 def _get_pill_identification_info(item_code):
-    """
-    낱알식별정보 API를 호출하여 장축, 단축, 두께, 성상 정보를 가져옴
-    """
     if not API_KEY:
         return {'error': '.env 파일에 GO_DATA_API_KEY를 설정해주세요.'} # 에러
 
@@ -58,16 +55,13 @@ def _get_pill_identification_info(item_code):
         return id_info
 
     except Exception as e:
-        # 이 API 호출이 실패해도 메인 기능은 동작해야 하므로, 에러 대신 빈 딕셔너리 반환
+        # 에러 대신 빈 딕셔너리 반환
         print(f"낱알식별정보 API 호출 실패 (item_code: {item_code}): {e}")
         return {}
     
 
 
 def get_pill_details_from_api(item_code):
-    """
-    공공데이터포털 API를 호출하여 품목기준코드로 알약 상세 정보를 조회
-    """
     if not API_KEY:
         return {'error': '.env 파일에 GO_DATA_API_KEY를 설정해주세요.'} # 에러
 
@@ -79,7 +73,6 @@ def get_pill_details_from_api(item_code):
     }
 
     try:
-        
         # 요청 빋기
         response = requests.get(url, params=params)
         response.raise_for_status() # HTTP 오류 발생 시 예외 처리
@@ -127,14 +120,11 @@ def get_pill_details_from_api(item_code):
     # 두 딕셔너리 병합
     details.update(id_info)
     
-    # 4. (수정) 병합된 딕셔너리 반환
+    # 병합된 딕셔너리 반환
     return details
 
     
 def get_pill_image_from_api(item_code):
-    """
-    공공데이터포털 API를 호출하여 품목기준코드로 알약 상세 정보를 조회
-    """
     if not API_KEY:
         return {'error': '.env 파일에 GO_DATA_API_KEY를 설정해주세요.'} # 에러
 
@@ -146,7 +136,6 @@ def get_pill_image_from_api(item_code):
     }
 
     try:
-        
         # 요청 빋기
         response = requests.get(url, params=params)
         response.raise_for_status() # HTTP 오류 발생 시 예외 처리
@@ -180,4 +169,5 @@ def get_pill_image_from_api(item_code):
         return {'error': f'API 요청 실패: {e}'} # 에러
     except ET.ParseError as e:
         return {'error': f'XML 파싱 실패: {e}'} # 에러
+
 
