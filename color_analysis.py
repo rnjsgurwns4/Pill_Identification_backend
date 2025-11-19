@@ -12,7 +12,7 @@ color_dict_rgb = {
     '보라': [142, 68, 173],   '분홍': [218, 132, 136],  '갈색': [160, 82, 45], '살구': [240, 190, 160]
 }
 
-# 모든 기준 색상의 LAB 값을 미리 계산하여 성능을 최적화합니다.
+# 모든 기준 색상의 LAB 값을 미리 계산하여 성능을 최적화
 color_dict_lab = {
     name: rgb2lab(np.uint8([[rgb]]))
     for name, rgb in color_dict_rgb.items()
@@ -20,10 +20,7 @@ color_dict_lab = {
 
 
 def map_rgb_to_color_name(rgb_color):
-    """
-    CIELAB 색 공간에서 Delta E 공식을 사용하여, 주어진 RGB 값과
-    가장 시각적으로 가까운 색상 이름을 찾습니다.
-    """
+# CIELAB 색 공간에서 Delta E 공식을 사용하여, 주어진 RGB 값과 가장 시각적으로 가까운 색상 이름을 추출.
     if rgb_color is None: return "알 수 없음"
     input_lab = rgb2lab(np.uint8([[list(rgb_color)]]))
     min_dist = float('inf')
@@ -37,10 +34,8 @@ def map_rgb_to_color_name(rgb_color):
 
 
 def analyze_pill_colors(pill_image_without_bg):
-    """
-    K-Means로 주요 색상 후보를 추출한 뒤, 후보 간의 시각적 유사도와
-    반사/그림자 여부를 판단하여 단일/다중 색상을 최종 결정합니다.
-    """
+    # K-Means로 주요 색상 후보를 추출한 뒤, 후보 간의 시각적 유사도와 반사/그림자 여부를 판단하여 단일/다중 색상을 최종 결정
+    
     try:
         image_rgb = cv2.cvtColor(pill_image_without_bg, cv2.COLOR_BGR2RGB)
         pixels = image_rgb.reshape(-1, 3)
@@ -85,12 +80,11 @@ def analyze_pill_colors(pill_image_without_bg):
         top2_rgb = sorted_clusters[1]['rgb']
         top2_name = map_rgb_to_color_name(top2_rgb)
 
-        # --- 단순하고 안정적인 최종 결정 로직 ---
         achromatic_colors = ['하양', '회색', '검정']
         top1_is_achromatic = top1_name in achromatic_colors
         top2_is_achromatic = top2_name in achromatic_colors
 
-        # 1. 반사/그림자 처리: 한쪽이 유채색이고 다른 쪽이 무채색이면, 유채색을 정답으로 선택
+        # 반사/그림자 처리: 한쪽이 유채색이고 다른 쪽이 무채색이면, 유채색을 정답으로 선택
         if top1_is_achromatic and not top2_is_achromatic:
 
             return [top2_rgb.tolist()], [top2_name]
@@ -99,19 +93,18 @@ def analyze_pill_colors(pill_image_without_bg):
 
             return [top1_rgb.tolist()], [top1_name]
 
-        # 2. 색상 유사도 처리: 두 색상이 비슷하면(예: 주황과 갈색) 하나의 색으로 통일
+        # 색상 유사도 처리: 두 색상이 비슷하면(예: 주황과 갈색) 하나의 색으로 통일
         delta_e = float(deltaE_cie76(rgb2lab(np.uint8([[top1_rgb]])), rgb2lab(np.uint8([[top2_rgb]]))))
         SIMILARITY_THRESHOLD = 25.0
         if delta_e < SIMILARITY_THRESHOLD:
 
             return [top1_rgb.tolist()], [top1_name]
 
-        # 3. 실제 다중 색상 처리: 위 두 경우에 해당하지 않으면, 실제로 두 가지 색을 가진 알약
+        # 실제 다중 색상 처리: 위 두 경우에 해당하지 않으면, 실제로 두 가지 색을 가진 알약
         final_rgb_colors = [top1_rgb.tolist(), top2_rgb.tolist()]
         final_color_names = sorted([top1_name, top2_name])
 
         return final_rgb_colors, final_color_names
 
     except Exception as e:
-
         return [[0, 0, 0]], ["알 수 없음"]
