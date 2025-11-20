@@ -5,14 +5,7 @@ import logging
 from google.cloud import vision
 
 
-
-
-
-
-# ----------------------------------------------------------------------
-
 def analyze_imprint_google(original_pill_image):
-    
     
     KEY_PATH = os.getenv("GOOGLE_APPLICATION_CREDENTIALS")
 
@@ -36,9 +29,7 @@ def analyze_imprint_google(original_pill_image):
         logging.error("1. .env의 .json 파일이 올바른지, 2. Google Cloud에서 'Cloud Vision API'를 '사용 설정'했는지 확인하세요.")
         client = None
     
-    """
-    YOLO가 잘라낸 '원본' 이미지를 Google Vision API로 분석하여 각인 텍스트를 추출
-    """
+    # YOLO가 잘라낸 원본 이미지를 Google Vision API로 분석하여 각인 텍스트를 추출
     if client is None:
         logging.error("Google Vision 클라이언트가 초기화되지 않아 OCR을 건너뜁니다.")
         return ""
