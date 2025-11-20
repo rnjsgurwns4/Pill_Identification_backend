@@ -192,7 +192,7 @@ def find_best_match(pill_db, identified_shape_info, identified_colors, identifie
         # shape_probabilities의 키(모양 이름)를 기준으로 후보군 필터링
         shape_match = row['shape'] in shape_probabilities
 
-        # (수정) identified_colors가 비어있을 수 있으므로 split() 전 확인
+        # identified_colors가 비어있을 수 있으므로 split() 전 확인
         color_list = identified_colors.split() if identified_colors else []
         color_match = any(color in row['color'] for color in color_list)
 
@@ -214,11 +214,8 @@ def find_best_match(pill_db, identified_shape_info, identified_colors, identifie
     for row in primary_candidates:
         # 파싱된 shape_probabilities 딕셔너리를 점수 계산에 사용
         score = calculate_score(row, shape_probabilities, identified_colors, identified_imprint)
-       # imprint_display = f"앞:{row.get('text', '')}/뒤:{row.get('text2', '')}"
-        #pill_info = f"{row['name']} ({row['shape']}, {row['color']}, {imprint_display})"
-        #candidates.append({'pill_info': pill_info, 'score': score})
         pill_name = row.get('name', '알 수 없음')
-        pill_code = row.get('code', 'N/A') # CSV에서 'code' 열을 가져옵니다.
+        pill_code = row.get('code', 'N/A')
         
         candidates.append({
             'pill_info': pill_name,  # 목표 1: 'pill_info'에 이름만 저장
@@ -231,18 +228,13 @@ def find_best_match(pill_db, identified_shape_info, identified_colors, identifie
     return [c for c in candidates if c['score'] > 0][:10]
 
 
-
-
-
-# --- 텍스트 검색 메인 함수 (포함 여부 기준) ---
 def find_match_by_text(pill_db, name, shape, color, imprint, 
                        form, company):
-    """
-    텍스트 검색어를 받아 DB에서 '포함하는' 모든 알약 리스트를 반환
-    """
+# 텍스트 검색어를 받아 DB에서 모든 알약 리스트를 반환
+
     candidates = []
     
-    # 검색어 정규화 (루프 밖에서 한 번만)
+    # 검색어 정규화
     search_name = name.upper().strip()
     search_shape = shape.upper().strip()
     search_color = color.upper().strip()
@@ -250,12 +242,12 @@ def find_match_by_text(pill_db, name, shape, color, imprint,
     search_form = form.upper().strip()
     search_company = company.upper().strip()
 
-    # '전체 검색'인지 확인
+    # 전체 검색인지 확인
     all_params_empty = not any([search_name, search_shape, search_color, search_imprint, search_form, search_company])
 
     for row in pill_db:
         
-        # '전체 검색'이면 score 없이 바로 추가
+        # 전체 검색이면 바로 추가
         if all_params_empty:
             candidates.append({
                 'pill_info': row.get('name', '알 수 없음'),
@@ -264,7 +256,7 @@ def find_match_by_text(pill_db, name, shape, color, imprint,
             })
             continue # 다음 알약으로
 
-        # '조건 검색'이면, 모든 조건이 맞는지(AND) 확인
+        # 조건 검색
         is_match = True
 
         # DB 값 정규화
@@ -276,8 +268,6 @@ def find_match_by_text(pill_db, name, shape, color, imprint,
         db_form = str(row.get('form', '')).upper()
         db_company = str(row.get('company', '')).upper()
 
-        # 하나라도 불일치하면 탈락 (is_match = False)
-        # (검색어가 있어야만 검사 수행)
         if search_name and search_name not in db_name:
             is_match = False
         
@@ -307,4 +297,5 @@ def find_match_by_text(pill_db, name, shape, color, imprint,
             })
 
     return candidates
+
 
