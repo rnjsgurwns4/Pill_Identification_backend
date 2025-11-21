@@ -33,7 +33,7 @@ print("Loading models and database for Celery worker...")
 SHAPE_MODEL_PATH = "weights/shape_model.h5"
 DB_PATH = "database/pill.csv"
 YOLO_MODEL_PATH = "weights/detection_model.pt"
-FONT_PATH_BOLD = "fonts/malgunbd.ttf"
+FONT_PATH_BOLD = "fonts/NotoSansKR-Medium.ttf"
 FONT_SIZE = 18
 
 PILL_DB = load_database(DB_PATH)
@@ -103,5 +103,6 @@ def analyze_pill_image_task(image_string):
         'processed_image': img_str,
         'pill_results': final_pill_results
     }
+
 
 
