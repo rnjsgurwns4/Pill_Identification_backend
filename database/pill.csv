@@ -14,16 +14,12 @@ num,name,shape,color,text,text2,code,form,company,image_url
 13,훼스탈플러스정,(달걀형)장방형,하양,훼스탈PLUS,,199801026,정제,(주)한독,https://nedrug.mfds.go.kr/pbp/cmn/itemImageDownload/1Os8pyE54Rj
 14,가네카정,원형,하양,G,cr,198601398,정제,지엘파마(주),https://nedrug.mfds.go.kr/pbp/cmn/itemImageDownload/154599010139600143
 15,가네탑골드연질캡슐,장방형,검정,가네탑골드,,200808096,연질캡슐,일양약품(주),https://nedrug.mfds.go.kr/pbp/cmn/itemImageDownload/1N7lFt9NAm7
-16,"가딘정75밀리그램
-
-(라니티딘염산염)",오각형,분홍,GD,75,201507261,정제,유니메드제약(주),
 17,가레오연질캡슐(디히드록시디부틸에테르),타원형,하양 검정,GAL250,,198802329,연질캡슐,조아제약(주),https://nedrug.mfds.go.kr/pbp/cmn/itemImageDownload/147427593004100048
 18,가레오연질캡슐500밀리그램(디히드록시디부틸에테르),장방형,하양 검정,GAL500,,198802326,연질캡슐,조아제약(주),https://nedrug.mfds.go.kr/pbp/cmn/itemImageDownload/147427593004100051
 19,감마마그빅연질캡슐,장방형,갈색,알파,,201500053,연질캡슐,알파제약(주),https://nedrug.mfds.go.kr/pbp/cmn/itemImageDownload/147426989724000081
 20,게루삼엠정(건조수산화알루미늄겔),원형,하양,AHG,,199501099,정제,삼남제약(주),https://nedrug.mfds.go.kr/pbp/cmn/itemImageDownload/147427668455400014
 21,게루삼정,원형,하양,G,G,196400046,정제,삼남제약(주),https://nedrug.mfds.go.kr/pbp/cmn/itemImageDownload/154307400984500104
 22,게보린릴랙스연질캡슐,장방형,주황,GRX,,202007294,연질캡슐,삼진제약(주),https://nedrug.mfds.go.kr/pbp/cmn/itemImageDownload/1NXqH06PVHI
-23,게보린브이정(아세트아미노펜),삼각형,하양,GRV,,202107495,정제,삼진제약(주),https://nedrug.mfds.go.kr/pbp/cmn/itemImageDownload/1O597tTUFYW
 24,게보린소프트연질캡슐,타원형,분홍,GRS,,201908295,연질캡슐,삼진제약(주),https://nedrug.mfds.go.kr/pbp/cmn/itemImageDownload/1OcIzQG1ql0
 25,게이트정(알마게이트),장방형,하양,WK,AMG,201310271,정제,오스틴제약(주),https://nedrug.mfds.go.kr/pbp/cmn/itemImageDownload/147426799381700051
 26,겔티-포르테연질캡슐,타원형,주황 갈색,YPA,,201201680,연질캡슐,영풍제약(주),https://nedrug.mfds.go.kr/pbp/cmn/itemImageDownload/147426597943600165
@@ -111,7 +107,7 @@ num,name,shape,color,text,text2,code,form,company,image_url
 109,노시드정,원형,하양,YN,,202002642,정제,영진약품(주),https://nedrug.mfds.go.kr/pbp/cmn/itemImageDownload/1NOwp2F6SM0
 110,노이제로정,타원형,갈색,JE^,,201701612,정제,태극제약(주),https://nedrug.mfds.go.kr/pbp/cmn/itemImageDownload/1N7WiIONw_z
 111,노이텍정,타원형,갈색,E^R,,201801617,정제,아이큐어(주),https://nedrug.mfds.go.kr/pbp/cmn/itemImageDownload/1P2JYwFs9NY
-112,노자임캡슐40000(판크레아틴장용성제피펠렛),장방형,갈색 주황,'40.000,,201307930,경질캡슐,(주)한국팜비오,https://nedrug.mfds.go.kr/pbp/cmn/itemImageDownload/149723228746300092
+112,노자임캡슐40000(판크레아틴장용성제피펠렛),장방형,갈색 주황,40.000,,201307930,경질캡슐,(주)한국팜비오,https://nedrug.mfds.go.kr/pbp/cmn/itemImageDownload/149723228746300092
 113,노즈그린연질캡슐,타원형,노랑,GRN,,202201683,연질캡슐,코스맥스파마(주),https://nedrug.mfds.go.kr/pbp/cmn/itemImageDownload/1OQ2VIm7Wbe
 114,노즈코프연질캡슐,장방형,빨강,노즈코프,,202300634,연질캡슐,태극제약(주),https://nedrug.mfds.go.kr/pbp/cmn/itemImageDownload/1OURtchspS-
 115,노즈파워연질캡슐,타원형,빨강,NOSP,,201601579,연질캡슐,한솔신약(주),https://nedrug.mfds.go.kr/pbp/cmn/itemImageDownload/153339724594600013
