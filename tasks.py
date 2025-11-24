@@ -1,5 +1,3 @@
-# tasks.py
-
 import os
 import cv2
 import base64
@@ -103,6 +101,7 @@ def analyze_pill_image_task(image_string):
         'processed_image': img_str,
         'pill_results': final_pill_results
     }
+
 
 
 
