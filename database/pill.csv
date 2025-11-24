@@ -10,8 +10,6 @@ num,name,shape,color,text,text2,code,form,company,image_url
 9,타이레놀정500밀리그람(아세트아미노펜),장방형,하양,TYLENOL,500,202106092,정제,한국존슨앤드존슨판매(유),https://nedrug.mfds.go.kr/pbp/cmn/itemImageDownload/1OKRXo9l4D5
 10,파자임-95밀리그램이중정,타원형,갈색,P^,,198300605,정제,부광약품(주),https://nedrug.mfds.go.kr/pbp/cmn/itemImageDownload/1McVeGQyqQL
 11,페니라민정(클로르페니라민말레산염),원형,노랑,YH,,196000011,정제,(주)유한양행,https://nedrug.mfds.go.kr/pbp/cmn/itemImageDownload/1Orz9gcUHnw
-12,훼스탈골드정,(달걀형)장방형,하양,훼스탈골드,,199900926,정제,(주)한독,https://nedrug.mfds.go.kr/pbp/cmn/itemImageDownload/1OqWQSX8FYq
-13,훼스탈플러스정,(달걀형)장방형,하양,훼스탈PLUS,,199801026,정제,(주)한독,https://nedrug.mfds.go.kr/pbp/cmn/itemImageDownload/1Os8pyE54Rj
 14,가네카정,원형,하양,G,cr,198601398,정제,지엘파마(주),https://nedrug.mfds.go.kr/pbp/cmn/itemImageDownload/154599010139600143
 15,가네탑골드연질캡슐,장방형,검정,가네탑골드,,200808096,연질캡슐,일양약품(주),https://nedrug.mfds.go.kr/pbp/cmn/itemImageDownload/1N7lFt9NAm7
 17,가레오연질캡슐(디히드록시디부틸에테르),타원형,하양 검정,GAL250,,198802329,연질캡슐,조아제약(주),https://nedrug.mfds.go.kr/pbp/cmn/itemImageDownload/147427593004100048
@@ -22,7 +20,7 @@ num,name,shape,color,text,text2,code,form,company,image_url
 22,게보린릴랙스연질캡슐,장방형,주황,GRX,,202007294,연질캡슐,삼진제약(주),https://nedrug.mfds.go.kr/pbp/cmn/itemImageDownload/1NXqH06PVHI
 24,게보린소프트연질캡슐,타원형,분홍,GRS,,201908295,연질캡슐,삼진제약(주),https://nedrug.mfds.go.kr/pbp/cmn/itemImageDownload/1OcIzQG1ql0
 25,게이트정(알마게이트),장방형,하양,WK,AMG,201310271,정제,오스틴제약(주),https://nedrug.mfds.go.kr/pbp/cmn/itemImageDownload/147426799381700051
-26,겔티-포르테연질캡슐,타원형,주황 갈색,YPA,,201201680,연질캡슐,영풍제약(주),https://nedrug.mfds.go.kr/pbp/cmn/itemImageDownload/147426597943600165
+26,겔티-포르테연질캡슐,장방형,빨강 갈색,YPA,,201201680,연질캡슐,영풍제약(주),https://nedrug.mfds.go.kr/pbp/cmn/itemImageDownload/147426597943600165
 27,경남그린웰연질캡슐,장방형,갈색,KN GW,,200501415,연질캡슐,경남제약(주),https://nedrug.mfds.go.kr/pbp/cmn/itemImageDownload/147428258513600026
 28,경남나프록센연질캡슐,타원형,초록,KN-N,,201403474,연질캡슐,경남제약(주),https://nedrug.mfds.go.kr/pbp/cmn/itemImageDownload/151810441495000045
 29,경남데일리디츄어블정,원형,노랑,KN-D,,201307766,정제,경남제약(주),https://nedrug.mfds.go.kr/pbp/cmn/itemImageDownload/149723228746300015
@@ -48,7 +46,7 @@ num,name,shape,color,text,text2,code,form,company,image_url
 50,그날엔콜드에이연질캡슐,타원형,노랑,GAC,,202302949,연질캡슐,경동제약(주),https://nedrug.mfds.go.kr/pbp/cmn/itemImageDownload/1P2JYwFsA6r
 51,그날엔콜드플러스연질캡슐,장방형,노랑,XGCP,,201705219,연질캡슐,경동제약(주),https://nedrug.mfds.go.kr/pbp/cmn/itemImageDownload/150539922160400068
 52,그날엔큐정,원형,하양,Q KYUNG DONG,,200906330,정제,경동제약(주),https://nedrug.mfds.go.kr/pbp/cmn/itemImageDownload/1OHXkPjtIWC
-53,그랑페롤연질캡슐1000아이유(비타민이프리퍼레이션),장방형,노랑,G1000,,198800444,연질캡슐,(주)유한양행,https://nedrug.mfds.go.kr/pbp/cmn/itemImageDownload/1OmM2OP_0ZK
+53,그랑페롤연질캡슐1000아이유(비타민이프리퍼레이션),장방형,주황,G1000,,198800444,연질캡슐,(주)유한양행,https://nedrug.mfds.go.kr/pbp/cmn/itemImageDownload/1OmM2OP_0ZK
 54,그랑페롤연질캡슐400아이유(비타민이프리퍼레이션)(군납명:토코페롤연질캡슐400아이유100캡슐),타원형,노랑,G400,,198700431,연질캡슐,(주)유한양행,https://nedrug.mfds.go.kr/pbp/cmn/itemImageDownload/1Oln5d5U9uA
 55,그루타제정,장방형,초록,GLT,,199502365,정제(장용정),지엘파마(주),https://nedrug.mfds.go.kr/pbp/cmn/itemImageDownload/1Oikd3yeYA9
 56,그린콜연질캡슐,장방형,노랑,GRC,,200608329,연질캡슐,(주)알피바이오,https://nedrug.mfds.go.kr/pbp/cmn/itemImageDownload/1NOwp2F6N8C
@@ -76,23 +74,23 @@ num,name,shape,color,text,text2,code,form,company,image_url
 78,나르펜정400밀리그램(이부프로펜)(수출명:PANALTab.),원형,주황,NF,CD,198701721,정제,초당약품공업(주),https://nedrug.mfds.go.kr/pbp/cmn/itemImageDownload/1Of1OQGVYyt
 79,나리센연질캡슐(나프록센),장방형,파랑,KKM,,201403877,연질캡슐,주식회사제뉴원사이언스,https://nedrug.mfds.go.kr/pbp/cmn/itemImageDownload/1NXa2J_KdEs
 80,나스타제정,장방형,초록,NAS,,201707455,정제,(주)한국파마,https://nedrug.mfds.go.kr/pbp/cmn/itemImageDownload/1NhETqzLMkB
-81,나스펜연질캡슐(아세트아미노펜),타원형,주황,CA NAS,,201906314,연질캡슐,조아제약(주),https://nedrug.mfds.go.kr/pbp/cmn/itemImageDownload/1Muwq7fAty_
+81,나스펜연질캡슐(아세트아미노펜),장방형,주황,CA NAS,,201906314,연질캡슐,조아제약(주),https://nedrug.mfds.go.kr/pbp/cmn/itemImageDownload/1Muwq7fAty_
 82,나쎈연질캡슐(나프록센),장방형,초록,나쎈,,201306491,연질캡슐,신일제약(주),https://nedrug.mfds.go.kr/pbp/cmn/itemImageDownload/147426697439100109
 83,나에겐연질캡슐(나프록센),장방형,주황,나에겐,,201401095,연질캡슐,(주)마더스제약,https://nedrug.mfds.go.kr/pbp/cmn/itemImageDownload/1MdYV-PxY6e
 84,나프노펜정(나프록센나트륨),타원형,파랑,NN,,200500806,정제,(주)일화,https://nedrug.mfds.go.kr/pbp/cmn/itemImageDownload/1PIMRzfJr_V
 85,나프록소정(나프록센나트륨),장방형,하양,NAP,275,201701248,정제,오스템파마주식회사,https://nedrug.mfds.go.kr/pbp/cmn/itemImageDownload/154817162448300012
-86,나프록신정(나프록센나트륨),타원형,파랑,HIP,NLX,200204388,정제,화일약품(주),https://nedrug.mfds.go.kr/pbp/cmn/itemImageDownload/1MpNPEsu-T7
+86,나프록신정(나프록센나트륨),장방형,파랑,HIP,NLX,200204388,정제,화일약품(주),https://nedrug.mfds.go.kr/pbp/cmn/itemImageDownload/1MpNPEsu-T7
 87,나프롱정(나프록센나트륨),장방형,파랑,NPRT,,199802387,정제,신일제약(주),https://nedrug.mfds.go.kr/pbp/cmn/itemImageDownload/1OlGSH7jteN
 88,나프원큐에스연질캡슐(나프록센),장방형,파랑,NOQS,,202003877,연질캡슐,동아제약(주),https://nedrug.mfds.go.kr/pbp/cmn/itemImageDownload/1NoOiJmZUtt
 89,나프원큐연질캡슐(나프록센),타원형,주황,NOQ,,201902876,연질캡슐,동아제약(주),https://nedrug.mfds.go.kr/pbp/cmn/itemImageDownload/1Pen6DWRNtP
 90,낙센연질캡슐(나프록센),타원형,분홍,NAX,,201501592,연질캡슐,(주)종근당,https://nedrug.mfds.go.kr/pbp/cmn/itemImageDownload/1OO88JPAn_6
 91,낙센정(나프록센),장방형,노랑,N250,,197500016,정제,(주)종근당,https://nedrug.mfds.go.kr/pbp/cmn/itemImageDownload/147427297681200156
 92,네로민정,원형,주황,GH,NE,201201967,정제,(유)한풍제약,https://nedrug.mfds.go.kr/pbp/cmn/itemImageDownload/1NeFqpW1gi-
-93,네오신정,원형,노랑,WBT,,202303220,정제,메딕스제약(주),https://nedrug.mfds.go.kr/pbp/cmn/itemImageDownload/1P2JYwFsAaf
+93,네오신정,원형,살구,WBT,,202303220,정제,메딕스제약(주),https://nedrug.mfds.go.kr/pbp/cmn/itemImageDownload/1P2JYwFsAaf
 94,네오콜캡슐,장방형,갈색 노랑,NY51 NY51,,201706691,경질캡슐,한국신텍스제약(주),https://nedrug.mfds.go.kr/pbp/cmn/itemImageDownload/151672206274500105
 95,네오콜코프캡슐,장방형,파랑 하양,NY52 NY52,,201800286,경질캡슐,한국신텍스제약(주),https://nedrug.mfds.go.kr/pbp/cmn/itemImageDownload/152415243654100033
 96,네오크로신연질캡슐(클로닉신리시네이트),타원형,파랑,NEO,,201803647,연질캡슐,(주)넥스팜코리아,https://nedrug.mfds.go.kr/pbp/cmn/itemImageDownload/1N8jUtEiHm-
-97,네프비타정,원형,주황,DID,,199802000,정제,하이플생명과학(주),https://nedrug.mfds.go.kr/pbp/cmn/itemImageDownload/1PT7hBiMTWm
+97,네프비타정,원형,살구,DID,,199802000,정제,하이플생명과학(주),https://nedrug.mfds.go.kr/pbp/cmn/itemImageDownload/1PT7hBiMTWm
 98,넥스팜염산암부록솔정(암브록솔염산염),원형,하양,AMBU,,199804331,정제,(주)넥스팜코리아,https://nedrug.mfds.go.kr/pbp/cmn/itemImageDownload/1MnfO1MVzhX
 99,넥스팜탄산칼슘정(침강탄산칼슘),원형,하양,NKCA,,199804362,정제,(주)넥스팜코리아,https://nedrug.mfds.go.kr/pbp/cmn/itemImageDownload/1MbnHD7rxmm
 100,넥스핀장용정100mg(아스피린),원형,하양,N^S,,201310349,정제,(주)넥스팜코리아,https://nedrug.mfds.go.kr/pbp/cmn/itemImageDownload/1P2JYwFsApr
@@ -100,14 +98,14 @@ num,name,shape,color,text,text2,code,form,company,image_url
 102,넬슨이부프로펜정200밀리그램(이부프로펜),원형,주황,KNP,,199501735,정제,한국넬슨제약(주),https://nedrug.mfds.go.kr/pbp/cmn/itemImageDownload/147427558691400000
 103,넬슨이부프로펜정400밀리그램(이부프로펜),타원형,주황,NELSON,,199501736,정제,한국넬슨제약(주),https://nedrug.mfds.go.kr/pbp/cmn/itemImageDownload/147427558691400012
 104,노량캡슐,장방형,초록 하양,NR AG,,202300042,경질캡슐,안국약품(주),https://nedrug.mfds.go.kr/pbp/cmn/itemImageDownload/1OURtchsAIC
-105,노리스정(클로닉신리시네이트),원형,노랑,NR,cr,198601395,정제,지엘파마(주),https://nedrug.mfds.go.kr/pbp/cmn/itemImageDownload/1NhETqzLMc6
+105,노리스정(클로닉신리시네이트),원형,살구,NR,cr,198601395,정제,지엘파마(주),https://nedrug.mfds.go.kr/pbp/cmn/itemImageDownload/1NhETqzLMc6
 106,노바멜라인장용정100밀리그램(브로멜라인),원형,분홍,NV,,202301788,정제,주식회사 노바엠헬스케어,https://nedrug.mfds.go.kr/pbp/cmn/itemImageDownload/1OZV2pPArkX
 107,노바프록센정(나프록센나트륨),타원형,파랑,NVM,7,202106248,정제,주식회사 노바엠헬스케어,https://nedrug.mfds.go.kr/pbp/cmn/itemImageDownload/1O0bxj5FjvT
 108,노스핀캡슐,장방형,노랑,Wal C35,,200906281,경질캡슐,오스틴제약(주),https://nedrug.mfds.go.kr/pbp/cmn/itemImageDownload/147426455627800068
 109,노시드정,원형,하양,YN,,202002642,정제,영진약품(주),https://nedrug.mfds.go.kr/pbp/cmn/itemImageDownload/1NOwp2F6SM0
 110,노이제로정,타원형,갈색,JE^,,201701612,정제,태극제약(주),https://nedrug.mfds.go.kr/pbp/cmn/itemImageDownload/1N7WiIONw_z
 111,노이텍정,타원형,갈색,E^R,,201801617,정제,아이큐어(주),https://nedrug.mfds.go.kr/pbp/cmn/itemImageDownload/1P2JYwFs9NY
-112,노자임캡슐40000(판크레아틴장용성제피펠렛),장방형,갈색 주황,40.000,,201307930,경질캡슐,(주)한국팜비오,https://nedrug.mfds.go.kr/pbp/cmn/itemImageDownload/149723228746300092
+112,노자임캡슐40000(판크레아틴장용성제피펠렛),장방형,갈색 주황,40,,201307930,경질캡슐,(주)한국팜비오,https://nedrug.mfds.go.kr/pbp/cmn/itemImageDownload/149723228746300092
 113,노즈그린연질캡슐,타원형,노랑,GRN,,202201683,연질캡슐,코스맥스파마(주),https://nedrug.mfds.go.kr/pbp/cmn/itemImageDownload/1OQ2VIm7Wbe
 114,노즈코프연질캡슐,장방형,빨강,노즈코프,,202300634,연질캡슐,태극제약(주),https://nedrug.mfds.go.kr/pbp/cmn/itemImageDownload/1OURtchspS-
 115,노즈파워연질캡슐,타원형,빨강,NOSP,,201601579,연질캡슐,한솔신약(주),https://nedrug.mfds.go.kr/pbp/cmn/itemImageDownload/153339724594600013
@@ -118,8 +116,8 @@ num,name,shape,color,text,text2,code,form,company,image_url
 120,눈모아연질캡슐,타원형,갈색,IWP,,200708954,연질캡슐,(주)아이월드제약,https://nedrug.mfds.go.kr/pbp/cmn/itemImageDownload/1NOwp2F6IE9
 121,뉴넥스정,원형,초록,NL,,202006971,정제,한국신텍스제약(주),
 122,뉴락스에프정,원형,초록,TGNF,,202004930,정제,태극제약(주),https://nedrug.mfds.go.kr/pbp/cmn/itemImageDownload/1NNuh6mJnaU
-123,뉴로친연질캡슐,장방형,노랑,뉴로친,,200301985,연질캡슐,(주)씨엠지제약,https://nedrug.mfds.go.kr/pbp/cmn/itemImageDownload/147428018612500085
-124,뉴먼트에이스연질캡슐,장방형,갈색,NMT ACE,,201308209,연질캡슐,제이더블유중외제약(주),https://nedrug.mfds.go.kr/pbp/cmn/itemImageDownload/1P2JYwFs6kB
+123,뉴로친연질캡슐,장방형,갈색,뉴로친,,200301985,연질캡슐,(주)씨엠지제약,https://nedrug.mfds.go.kr/pbp/cmn/itemImageDownload/147428018612500085
+124,뉴먼트에이스연질캡슐,장방형,검정,NMT ACE,,201308209,연질캡슐,제이더블유중외제약(주),https://nedrug.mfds.go.kr/pbp/cmn/itemImageDownload/1P2JYwFs6kB
 125,뉴모나정(덱스판테놀),원형,하양,NMN,,202007137,정제,경동제약(주),
 126,뉴스피린장용정100밀리그램(아스피린),원형,하양,DM,^S,201801356,정제,(주)다산제약,https://nedrug.mfds.go.kr/pbp/cmn/itemImageDownload/153339721554900111
 127,뉴에르도테캡슐(에르도스테인),장방형,초록 노랑,AN EDT,,201602871,경질캡슐,안국뉴팜(주),https://nedrug.mfds.go.kr/pbp/cmn/itemImageDownload/148362082166500066
@@ -132,12 +130,12 @@ num,name,shape,color,text,text2,code,form,company,image_url
 134,니자드정(니자티딘),원형,노랑,ENK,ND,201404327,정제,(주)이든파마,https://nedrug.mfds.go.kr/pbp/cmn/itemImageDownload/1NoOiJmZV07
 135,니자티드정(니자티딘),원형,노랑,NZT 75,,200501559,정제,(주)한국파마,https://nedrug.mfds.go.kr/pbp/cmn/itemImageDownload/147765867288000094
 136,니타딘정(니자티딘),원형,노랑,NKN,,200302728,정제,(주)넥스팜코리아,https://nedrug.mfds.go.kr/pbp/cmn/itemImageDownload/1PWvmOITHuh
-137,다나센연질캡슐(나프록센),타원형,파랑,SNP,,201404125,연질캡슐,(주)에이프로젠바이오로직스,https://nedrug.mfds.go.kr/pbp/cmn/itemImageDownload/154176795981800053
+137,다나센연질캡슐(나프록센),타원형,초록,SNP,,201404125,연질캡슐,(주)에이프로젠바이오로직스,https://nedrug.mfds.go.kr/pbp/cmn/itemImageDownload/154176795981800053
 138,다나프록센정(나프록센나트륨)(수출용),타원형,파랑,HK DN,,200705433,정제,한국코러스(주),https://nedrug.mfds.go.kr/pbp/cmn/itemImageDownload/148007720779100183
-139,다리아정,원형,노랑,KY 1,,201706530,정제,한국신텍스제약(주),https://nedrug.mfds.go.kr/pbp/cmn/itemImageDownload/151672206274500117
+139,다리아정,원형,갈색,KY 1,,201706530,정제,한국신텍스제약(주),https://nedrug.mfds.go.kr/pbp/cmn/itemImageDownload/151672206274500117
 140,다모판텐정100밀리그램(덱스판테놀) ,원형,하양,DXP,,202006701,정제,맥널티제약(주),https://nedrug.mfds.go.kr/pbp/cmn/itemImageDownload/1NhoLkusiFv
 141,다비어정,원형,초록,CP5,,201602093,정제,(주)씨엠지제약,https://nedrug.mfds.go.kr/pbp/cmn/itemImageDownload/147427232964000023
-142,다산알벤다졸정400밀리그램,장방형,주황,DM,A,202004224,정제,(주)다산제약,https://nedrug.mfds.go.kr/pbp/cmn/itemImageDownload/1NOwp2F66xS
+142,다산알벤다졸정400밀리그램,장방형,살구,DM,A,202004224,정제,(주)다산제약,https://nedrug.mfds.go.kr/pbp/cmn/itemImageDownload/1NOwp2F66xS
 143,다이락스-큐정,원형,초록,C^,,200904507,정제,조아제약(주),https://nedrug.mfds.go.kr/pbp/cmn/itemImageDownload/150834126208100140
 144,다이락스쎈정,원형,초록,CA RB,,202301820,정제,조아제약(주),https://nedrug.mfds.go.kr/pbp/cmn/itemImageDownload/1OfFuJXMKWP
 145,다이오친에프정,원형,보라,S^,,200400785,정제,삼아제약(주),https://nedrug.mfds.go.kr/pbp/cmn/itemImageDownload/150834130612600060
@@ -145,11 +143,11 @@ num,name,shape,color,text,text2,code,form,company,image_url
 147,다이제스토정,장방형,초록,DGO,,200902108,정제,화일약품(주),https://nedrug.mfds.go.kr/pbp/cmn/itemImageDownload/1OflX036cmW
 148,다이제스트정,장방형,초록,MTS,PC,200200852,정제,(주)마더스제약,https://nedrug.mfds.go.kr/pbp/cmn/itemImageDownload/1N_tI6JB9dY
 149,다이제틴정,원형,초록,^3,,200904689,정제,알리코제약(주),https://nedrug.mfds.go.kr/pbp/cmn/itemImageDownload/1PYFqZxFyQw
-150,다졸정(알벤다졸),장방형,주황,DZT,,202002084,정제,아이큐어(주),https://nedrug.mfds.go.kr/pbp/cmn/itemImageDownload/1NB7nLey5uL
+150,다졸정(알벤다졸),장방형,살구,DZT,,202002084,정제,아이큐어(주),https://nedrug.mfds.go.kr/pbp/cmn/itemImageDownload/1NB7nLey5uL
 151,다펜-큐연질캡슐(이부프로펜),타원형,파랑,CADFQ,,201500673,연질캡슐,조아제약(주),https://nedrug.mfds.go.kr/pbp/cmn/itemImageDownload/1OcWuLSAyDt
 152,다펜나이트연질캡슐,타원형,노랑,CA DN,,202303276,연질캡슐,조아제약(주),https://nedrug.mfds.go.kr/pbp/cmn/itemImageDownload/1P2JYwFs9iw
 153,다펜덱시연질캡슐(덱시부프로펜),타원형,파랑,CA DX,,202401681,연질캡슐,조아제약(주),https://nedrug.mfds.go.kr/pbp/cmn/itemImageDownload/1PEPKBUcjg9
-154,다펜캡슐(이부프로펜)(수출용),장방형,초록 하양,CHO-A DAF,,200003489,경질캡슐,조아제약(주),https://nedrug.mfds.go.kr/pbp/cmn/itemImageDownload/1Oi0vWfEyhP
+154,다펜캡슐(이부프로펜)(수출용),장방형,초록 노랑,CHO-A DAF,,200003489,경질캡슐,조아제약(주),https://nedrug.mfds.go.kr/pbp/cmn/itemImageDownload/1Oi0vWfEyhP
 155,다푸러펜정,원형,하양,CH24,,202400957,정제,경남제약(주),
 156,단자민정(디펜히드라민염산염),장방형,하양,KDC,DZ,200808028,정제,고려제약(주),https://nedrug.mfds.go.kr/pbp/cmn/itemImageDownload/147427921494800068
 157,담엔쿨정,원형,하양,SK,,202400780,정제,에스케이케미칼(주),https://nedrug.mfds.go.kr/pbp/cmn/itemImageDownload/1P2JYwFsBve
@@ -170,18 +168,18 @@ num,name,shape,color,text,text2,code,form,company,image_url
 172,덱사펜정(덱시부프로펜),장방형,분홍,HN,DXF,200100417,정제,하나제약(주),https://nedrug.mfds.go.kr/pbp/cmn/itemImageDownload/1PPb53M-tRh
 173,덱스녹실정(덱스판테놀),원형,하양,DEL,,202004385,정제,현대약품(주),https://nedrug.mfds.go.kr/pbp/cmn/itemImageDownload/1NXVKYFvlMP
 174,덱스렌정(덱시부프로펜디.씨.),장방형,주황,^UK,DXB,201602068,정제,(주)오스코리아제약,https://nedrug.mfds.go.kr/pbp/cmn/itemImageDownload/1Mf9b53Dgmt
-175,덱스원큐에스연질캡슐(덱시부프로펜),장방형,파랑,DOQS,,202003788,연질캡슐,동아제약(주),https://nedrug.mfds.go.kr/pbp/cmn/itemImageDownload/1NvwvvpEO07
-176,덱스원큐연질캡슐(덱시부프로펜),타원형,파랑,DOQ,,201902982,연질캡슐,동아제약(주),https://nedrug.mfds.go.kr/pbp/cmn/itemImageDownload/1MncJAM5kN5
+175,덱스원큐에스연질캡슐(덱시부프로펜),장방형,초록,DOQS,,202003788,연질캡슐,동아제약(주),https://nedrug.mfds.go.kr/pbp/cmn/itemImageDownload/1NvwvvpEO07
+176,덱스원큐연질캡슐(덱시부프로펜),장방형,초록,DOQ,,201902982,연질캡슐,동아제약(주),https://nedrug.mfds.go.kr/pbp/cmn/itemImageDownload/1MncJAM5kN5
 177,덱스쿨연질캡슐(덱시부프로펜),타원형,파랑,IYDX,,200905351,연질캡슐,일양약품(주),https://nedrug.mfds.go.kr/pbp/cmn/itemImageDownload/1N-vZRnyppE
 178,덱스프리연질캡슐(덱시부프로펜),장방형,초록,DF300,,201904806,연질캡슐,(주)필인터내셔널,https://nedrug.mfds.go.kr/pbp/cmn/itemImageDownload/1On2ryplIfT
 179,덱스피드연질캡슐(덱시부프로펜),타원형,파랑,YH DXP,,201110646,연질캡슐,(주)유한양행,https://nedrug.mfds.go.kr/pbp/cmn/itemImageDownload/1OCxjzi8sHI
 180,덱시로펜정(덱시부프로펜),장방형,분홍,DPC,,200400135,정제,동광제약(주),https://nedrug.mfds.go.kr/pbp/cmn/itemImageDownload/147427738395000175
 181,덱시부펜연질캡슐(덱시부프로펜),타원형,파랑,JI DB,,200809274,연질캡슐,제일헬스사이언스(주),https://nedrug.mfds.go.kr/pbp/cmn/itemImageDownload/1O5i42zbIha
 182,덱시엔연질캡슐(덱시부프로펜),타원형,파랑,SK DEX,,200900041,연질캡슐,에스케이케미칼(주),https://nedrug.mfds.go.kr/pbp/cmn/itemImageDownload/1PZ4l5sRYgm
-183,덱시원연질캡슐(덱시부프로펜),타원형,파랑,덱시원,,200808462,연질캡슐,한국코러스(주),https://nedrug.mfds.go.kr/pbp/cmn/itemImageDownload/1Mq-1T3NO-a
+183,덱시원연질캡슐(덱시부프로펜),타원형,초록,덱시원,,200808462,연질캡슐,한국코러스(주),https://nedrug.mfds.go.kr/pbp/cmn/itemImageDownload/1Mq-1T3NO-a
 184,덱시푸루펜연질캡슐(덱시부프로펜),장방형,노랑,YDP,,201110516,연질캡슐,영진약품(주),https://nedrug.mfds.go.kr/pbp/cmn/itemImageDownload/1NDXmGS9fJO
-185,덱시프렌드연질캡슐(덱시부프로펜),장방형,파랑,덱시프렌드,,201503809,연질캡슐,부광약품(주),https://nedrug.mfds.go.kr/pbp/cmn/itemImageDownload/147427082737900120
-186,덱쎈연질캡슐(덱시부프로펜),장방형,파랑,DEXEN,,201401248,연질캡슐,(주)마더스제약,https://nedrug.mfds.go.kr/pbp/cmn/itemImageDownload/147426847266800078
+185,덱시프렌드연질캡슐(덱시부프로펜),장방형,초록,덱시프렌드,,201503809,연질캡슐,부광약품(주),https://nedrug.mfds.go.kr/pbp/cmn/itemImageDownload/147427082737900120
+186,덱쎈연질캡슐(덱시부프로펜),장방형,초록,DEXEN,,201401248,연질캡슐,(주)마더스제약,https://nedrug.mfds.go.kr/pbp/cmn/itemImageDownload/147426847266800078
 187,덱펜정(덱시부프로펜),장방형,분홍,Kb,D300,201701383,정제,(주)경보제약,https://nedrug.mfds.go.kr/pbp/cmn/itemImageDownload/150160203116300165
 188,덴스롤캡슐,장방형,초록,SK Dent,,200201998,경질캡슐,에스케이케미칼(주),https://nedrug.mfds.go.kr/pbp/cmn/itemImageDownload/1Nkd205G5Wp
 189,덴스민캡슐,장방형,초록,PK-B PK-B,,199702621,경질캡슐,(주)한국파비스제약,https://nedrug.mfds.go.kr/pbp/cmn/itemImageDownload/151672211034800040
@@ -204,7 +202,7 @@ num,name,shape,color,text,text2,code,form,company,image_url
 206,덴파사캡슐,장방형,파랑,DA DPS,,200708081,경질캡슐,동아제약(주),https://nedrug.mfds.go.kr/pbp/cmn/itemImageDownload/1MrFeLzYHro
 207,덴퍼스골드캡슐,장방형,노랑,덴퍼스 골드,,201404885,경질캡슐,한국코러스(주),https://nedrug.mfds.go.kr/pbp/cmn/itemImageDownload/147426948856300174
 208,덴플러스포르테캡슐,장방형,파랑,ETX DF,,200808774,경질캡슐,(주)테라젠이텍스,https://nedrug.mfds.go.kr/pbp/cmn/itemImageDownload/147427931156600158
-209,도나펜에프연질캡슐,타원형,파랑,도나펜F,,202200707,경질캡슐,(주)서흥,https://nedrug.mfds.go.kr/pbp/cmn/itemImageDownload/1OZ25fiXcB-
+209,도나펜에프연질캡슐,장방형,파랑,도나펜F,,202200707,경질캡슐,(주)서흥,https://nedrug.mfds.go.kr/pbp/cmn/itemImageDownload/1OZ25fiXcB-
 210,도스틴캡슐(에르도스테인),장방형,초록 노랑,SA DST,,200300579,경질캡슐,삼아제약(주),https://nedrug.mfds.go.kr/pbp/cmn/itemImageDownload/1Og9J5dfYya
 211,독립목클린캡슐200밀리그램(아세틸시스테인),장방형,하양,DLB ACC,,201900187,경질캡슐,독립바이오제약(주),https://nedrug.mfds.go.kr/pbp/cmn/itemImageDownload/1Me1jz_9peU
 212,동광세티리진염산염정,장방형,하양,DK,,200000242,정제,동광제약(주),https://nedrug.mfds.go.kr/pbp/cmn/itemImageDownload/147427748827800002
@@ -240,7 +238,7 @@ num,name,shape,color,text,text2,code,form,company,image_url
 242,디카엠정,원형,분홍,MJ,1,201303989,정제,(주)마더스제약,https://nedrug.mfds.go.kr/pbp/cmn/itemImageDownload/147426676298300011
 243,디카킴디정,장방형,초록,KIM,100,202107747,정제,(주)킴스제약,https://nedrug.mfds.go.kr/pbp/cmn/itemImageDownload/1OANLAkAEmI
 244,디카틴정(엘카르니틴),원형,하양,DCT,,200809786,정제,대한뉴팜(주),https://nedrug.mfds.go.kr/pbp/cmn/itemImageDownload/1OlOLWGgcPO
-245,디큐펜맥스연질캡슐,장방형,주황,DQP-M,,202200793,연질캡슐,(주)알피바이오,https://nedrug.mfds.go.kr/pbp/cmn/itemImageDownload/1O7oG5g7jl4
+245,디큐펜맥스연질캡슐,장방형,빨강,DQP-M,,202200793,연질캡슐,(주)알피바이오,https://nedrug.mfds.go.kr/pbp/cmn/itemImageDownload/1O7oG5g7jl4
 246,디큐펜맥스정500밀리그램(아세트아미노펜),장방형,하양,Q-pen,,202301097,정제,(주)알피바이오,https://nedrug.mfds.go.kr/pbp/cmn/itemImageDownload/1OW5q-P0Ihj
 247,디큐펜프로나이트연질캡슐,타원형,노랑,QP.N,,202100359,연질캡슐,(주)알피바이오,https://nedrug.mfds.go.kr/pbp/cmn/itemImageDownload/1OmM2OP_0YU
 248,디큐펜프로연질캡슐(이부프로펜),타원형,파랑,QP,,201005773,연질캡슐,(주)알피바이오,https://nedrug.mfds.go.kr/pbp/cmn/itemImageDownload/1OlyW7wP-ni
@@ -285,7 +283,7 @@ num,name,shape,color,text,text2,code,form,company,image_url
 288,레디페린-에프캡슐,장방형,빨강,LFC SAMJIN,,200501573,경질캡슐,삼진제약(주),https://nedrug.mfds.go.kr/pbp/cmn/itemImageDownload/151672211034800118
 289,레모나씨플러스정,장방형,노랑,KNL,,201505608,정제,경남제약(주),https://nedrug.mfds.go.kr/pbp/cmn/itemImageDownload/147427106970700134
 290,레베스정,장방형,갈색,IWP,,201700854,정제,(주)아이월드제약,https://nedrug.mfds.go.kr/pbp/cmn/itemImageDownload/148907400873300038
-291,레보시톤연질캡슐(엘-시스틴),장방형,갈색,YPL,,198902101,연질캡슐,영풍제약(주),https://nedrug.mfds.go.kr/pbp/cmn/itemImageDownload/147809054104100134
+291,레보시톤연질캡슐(엘-시스틴),장방형,갈색 초록,YPL,,198902101,연질캡슐,영풍제약(주),https://nedrug.mfds.go.kr/pbp/cmn/itemImageDownload/147809054104100134
 292,레스톨캡슐,장방형,파랑,MM LST,,200202720,경질캡슐,명문제약(주),https://nedrug.mfds.go.kr/pbp/cmn/itemImageDownload/147427858033600025
 293,레이디원연질캡슐,장방형,하양,레이디원,,201801498,연질캡슐,제일헬스사이언스(주),https://nedrug.mfds.go.kr/pbp/cmn/itemImageDownload/152795406231200063
 294,레이디퀸연질캡슐,장방형,파랑,APG PK,,201708080,연질캡슐,(주)에이프로젠바이오로직스,https://nedrug.mfds.go.kr/pbp/cmn/itemImageDownload/152345165220300058
@@ -297,8 +295,8 @@ num,name,shape,color,text,text2,code,form,company,image_url
 300,렉스민캡슐(디오스민) ,장방형,초록,sr DIO,,201906924,경질캡슐,(주)시어스제약,https://nedrug.mfds.go.kr/pbp/cmn/itemImageDownload/1OQdQ5pD5HE
 301,렉스펜에스정,원형,하양,T72,,202400777,정제,한솔신약(주),https://nedrug.mfds.go.kr/pbp/cmn/itemImageDownload/1P3diGKSD9D
 302,렘피드캡슐(에르도스테인),장방형,초록 노랑,MTS LMP,,201605007,경질캡슐,(주)마더스제약,https://nedrug.mfds.go.kr/pbp/cmn/itemImageDownload/147446607885900111
-303,렛잇비프로원정,장방형,노랑,LEO,,202400657,정제,(주)대웅제약,https://nedrug.mfds.go.kr/pbp/cmn/itemImageDownload/1P2JYwFs7M7
-304,렛잇비프로정,장방형,노랑,LEP,,202108018,정제,(주)대웅제약,https://nedrug.mfds.go.kr/pbp/cmn/itemImageDownload/1Nx4Buwxt6B
+303,렛잇비프로원정,장방형,살구,LEO,,202400657,정제,(주)대웅제약,https://nedrug.mfds.go.kr/pbp/cmn/itemImageDownload/1P2JYwFs7M7
+304,렛잇비프로정,장방형,살구,LEP,,202108018,정제,(주)대웅제약,https://nedrug.mfds.go.kr/pbp/cmn/itemImageDownload/1Nx4Buwxt6B
 305,로나코프연질캡슐,타원형,초록,로나코프,,201907014,연질캡슐,(주)서흥,https://nedrug.mfds.go.kr/pbp/cmn/itemImageDownload/1OUz3s18TeJ
 306,로나콜연질캡슐,타원형,빨강,로나콜,,201907024,연질캡슐,(주)서흥,https://nedrug.mfds.go.kr/pbp/cmn/itemImageDownload/1OUz3s18Te1
 307,로노펜300연질캡슐(덱시부프로펜),장방형,초록,RNP,,200904082,연질캡슐,태극제약(주),https://nedrug.mfds.go.kr/pbp/cmn/itemImageDownload/147426422478000130
