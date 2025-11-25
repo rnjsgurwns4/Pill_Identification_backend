@@ -77,7 +77,7 @@ def analyze_single_pill(cropped_pill_image, shape_model, pill_db):
                     print(f"  --- AI: {primary_prediction}, Fill Ratio: {fill_ratio:.2f} ---")
 
                     scores_dict = dict(shape_result)
-                    if fill_ratio < 0.89: # 89% 미만이면 타원형
+                    if fill_ratio < 0.85: # 85% 미만이면 타원형
                         if primary_prediction != '타원형':
                             if not(scores_dict['장방형'] > 0.9):
                                 temp = scores_dict['타원형']
@@ -164,3 +164,4 @@ def process_and_visualize_pills(original_image, pill_boxes, shape_model, pill_db
     
 
     return image_with_results, candidates_by_box
+
